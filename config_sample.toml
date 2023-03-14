@@ -1,0 +1,7 @@
+api_url = ""
+api_port = 0
+api_key = ""
+bot_account = 0
+target_group = 0
+log_level = 2
+target_admin_permission = true
