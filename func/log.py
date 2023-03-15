@@ -33,7 +33,7 @@ def fWrite(text):
     logfile.close()
     flock.release()
     
-def wprint(text,ltype=0):
+def Print(text,ltype=0):
     global loglevel
     global errorCount
     text = str(text)

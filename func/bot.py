@@ -1,63 +1,194 @@
-import os
-import importlib
 import toml
 import requests
 import json
 import sys
 from func import log
+from func import message
 
-class Bot:  #储存api地址 bot信息 密钥
+class Bot:
     api = ""
-    bot = 0
+    account = 0
     target = 0
     session  = ""
+    normalmsg = []
+    targetmsg = []
+    syncmsg = []
+    botevent = []
+    undevent = []
     def __init__(self) -> None:
-        #读取配置文件并尝试连接api
+    #读取配置文件并尝试连接api
         configs = toml.load("./config.toml")
         self.api = configs["api_url"]+":"+str(configs["api_port"])+"/"
-        self.bot = configs["bot_account"]
+        self.account = configs["bot_account"]
         self.target = configs["target_group"]
         try:
             verifyMessage = {"verifyKey": configs["api_key"]}
             verifyPost = requests.post(self.api+"verify",json.dumps(verifyMessage,ensure_ascii=False))
             sessionMessage = json.loads(verifyPost.text)
-            verifyPost.close()
             if(sessionMessage["code"]!=0):
                 raise Exception("SessionVerify_Error")
-            bindMessage = {"sessionKey": sessionMessage["session"],"qq": self.bot}
+            bindMessage = {"sessionKey": sessionMessage["session"],"qq": self.account}
             bindPost = requests.post(self.api+"bind",json.dumps(bindMessage,ensure_ascii=False))
-            bindPost.close()
             bindResult = json.loads(bindPost.text)
             if(bindResult["code"]!=0):
                 raise Exception("SessionBind_Error")
             self.session = sessionMessage["session"]
             self.success = True
-            log.wprint("BotConnection: Verify & Bind success.",1)
+            log.Print("BotConnection: Verify & Bind success.",1)
         except Exception as e:
-            log.wprint(e)
+            log.Print(e)
             sys.exit()
-
-#初始化插件部分 UNFINISHED
-
-def pluginload():
-    files = os.listdir("./plugins/")
-    d = []
-    for file in files:
-        if(".py" in file):
-            filename = file.strip(".py")
-            d.append(importlib.import_module("plugins."+filename))
-    log.wprint("Detected "+str(len(d))+" plugin(s).",1)
-    return d
-
-class PluginLib:#UNFINISHED
-    syncPlugin = []
-    passPlugin = []
-    stopPlugin = []
-    def __init__(self) -> None:
-        pluginraw = pluginload()
-        for plugin in pluginraw:
-            plugininfo = {}
-            plugininfo["run"] = plugin
-            self.syncPlugin.append(plugininfo)
-        
-
+    def __del__(self):
+        try:
+            releaseMessage = {"sessionKey": self.session,"qq": self.account}
+            releasePost = json.loads(requests.post(self.api+"release",json.dumps(releaseMessage,ensure_ascii=False)).text)
+            if(releasePost["code"]!=0):
+                raise Exception("SessionRelease_Error")
+            log.Print("Bot release success.",1)
+        except Exception as e:
+            log.Print(e)
+    def GroupSend(self,messageChain,target:int=None): #群号可选
+        smessage = {"sessionKey":self.session,"target":self.target,"messageChain":[]}
+        smessage["messageChain"]=messageChain.chain
+        if(target!=None):
+            smessage["target"]=target
+        try:
+            posts = requests.post(self.api+"sendGroupMessage",json.dumps(smessage,ensure_ascii=False).encode())
+            if(json.loads(posts.text)["code"]!=0):
+                self.errors = json.loads(posts.text)
+                raise Exception(posts.text)
+        except Exception as e:
+            log.Print(e)
+            return False
+        return True
+    def FriendSend(self,messageChain,target:int):
+        smessage = {"sessionKey":self.session,"target":target,"messageChain":[]}
+        smessage["messageChain"]=messageChain.chain
+        try:
+            posts = requests.post(self.api+"sendGroupMessage",json.dumps(smessage,ensure_ascii=False).encode())
+            if(json.loads(posts.text)["code"]!=0):
+                self.errors = json.loads(posts.text)
+                raise Exception(posts.text)
+        except Exception as e:
+            log.Print(e)
+            return False
+        return True
+    #Future:临时会话发送 获取bot,群,用户信息 撤回 戳一戳 账号管理 群管理
+    #UNFINISHED:发送同时兼容id和Person类
+    def _fetch(self):
+        url = self.api+"fetchMessage?sessionKey="+self.session
+        messagelist = []
+        try:
+            i = json.loads(requests.get(url).text)
+            if(i["code"]!=0):
+                raise Exception({"code":i["code"],"msg":i["msg"]})
+            messagelist = i["data"]
+        except Exception as e:
+            log.Print(e)
+        if(len(messagelist)==0):
+            return None
+        for message in messagelist:
+            match message["type"]:
+                case "GroupMessage":
+                    if(message["sender"]["group"]["id"] == self.target):self.targetmsg.append(message)
+                    else:self.normalmsg.append(message)
+                case "FriendRecallEvent":
+                    self.normalmsg.append(message)
+                case "NudgeEvent":
+                    self.targetmsg.append(message)
+                case "GroupRecallEvent":
+                    if(message["group"]["id"] == self.target):self.targetmsg.append(message)
+                    else:self.normalmsg.append(message)
+                case "MemberJoinEvent":
+                    if(message["member"]["group"]["id"] == self.target):self.targetmsg.append(message)
+                    else:self.normalmsg.append(message)
+                case "MemberLeaveEventKick":
+                    if(message["member"]["group"]["id"] == self.target):self.targetmsg.append(message)
+                    else:self.normalmsg.append(message)
+                case "MemberLeaveEventQuit":
+                    if(message["member"]["group"]["id"] == self.target):self.targetmsg.append(message)
+                    else:self.normalmsg.append(message)
+                case "MemberPermissionChangeEvent":
+                    if(message["member"]["group"]["id"] == self.target):self.targetmsg.append(message)
+                    else:self.normalmsg.append(message)
+                case "MemberMuteEvent":
+                    if(message["member"]["group"]["id"] == self.target):self.targetmsg.append(message)
+                    else:self.normalmsg.append(message)
+                case "FriendMessage":
+                    self.normalmsg.append(message)
+                case "TempMessage":
+                    self.normalmsg.append(message)
+                case "StrangerMessage":
+                    self.normalmsg.append(message)
+                case "OtherClientMessage":
+                    self.normalmsg.append(message)
+                case "FriendSyncMessage":
+                    self.syncmsg.append(message)
+                case "GroupSyncMessage":
+                    self.syncmsg.append(message)
+                case "TempSyncMessage":
+                    self.syncmsg.append(message)
+                case "StrangerSyncMessage":
+                    self.syncmsg.append(message)
+                case "BotOnlineEvent":
+                    self.botevent.append(message)
+                case "BotOfflineEventActive":
+                    self.botevent.append(message)
+                case "BotOfflineEventForce":
+                    self.botevent.append(message)
+                case "BotOfflineEventDropped":
+                    self.botevent.append(message)
+                case "BotReloginEvent":
+                    self.botevent.append(message)
+                case "BotGroupPermissionChangeEvent":
+                    self.botevent.append(message)
+                case "BotMuteEvent":
+                    self.botevent.append(message)
+                case "BotUnmuteEvent":
+                    self.botevent.append(message)
+                case "BotJoinGroupEvent":
+                    self.botevent.append(message)
+                case "BotLeaveEventActive":
+                    self.botevent.append(message)
+                case "BotLeaveEventKick":
+                    self.botevent.append(message)
+                case "BotLeaveEventDisband":
+                    self.botevent.append(message)
+                case "GroupMuteAllEvent":
+                    self.botevent.append(message)
+                case "NewFriendRequestEvent":
+                    self.botevent.append(message)
+                case "MemberJoinRequestEvent":
+                    self.botevent.append(message)
+                case "BotInvitedJoinGroupRequestEvent":
+                    self.botevent.append(message)
+                case "OtherClientOnlineEvent":
+                    self.botevent.append(message)
+                case "OtherClientOfflineEvent":
+                    self.botevent.append(message)
+                case _:
+                    self.undevent.append(message)
+    def fetchMessage(self,istarget:bool=False):
+        self._fetch()
+        if(istarget==True):
+            if(len(self.targetmsg)!=0):return self.targetmsg.pop()
+        else:
+            if(len(self.normalmsg)!=0):return self.normalmsg.pop()
+        return {}
+    def fetchSync(self):
+        self._fetch()
+        if(len(self.syncmsg)!=0):return self.syncmsg.pop()
+        return {}
+    def fetchUndefined(self):
+        self._fetch()
+        if(len(self.undevent)!=0):return self.undevent.pop()
+        return {}
+    def fetchEvent(self):
+        self._fetch()
+        if(len(self.botevent)!=0):return self.botevent.pop()
+        return {}
+    #UNFINISHED:fetch输出改为新的Chain+Person/Event类
+    def fetchSingle(self,messageid:int,targetid:int):
+        #Future:返回值加入发送者信息 支持更多类型
+        #UNFINISHED
+        pass

@@ -3,20 +3,15 @@ import time
 from func import bot
 from func import message
 
-from threading import Thread
-import random
 
-bot = bot.Bot()
-send = message.SendAct(bot)
+
+b = bot.Bot()
+m = message.Chain()
+t = message.Plain("messageSend funcion normal.")
+m.add(t)
+b.GroupSend(m)
 while(1):
-    messages = message.fetchMessage(bot)
-    if(len(messages)!=0):
-        for m in messages:
-            print(m)
+    msg = b.fetchMessage(True)
+    msgo = b.fetchMessage()
+    if(msg!={} or msgo!={}):print(str(msg)+str(msgo)+"\n")
     time.sleep(0.1)
-
-
-
-
-
-

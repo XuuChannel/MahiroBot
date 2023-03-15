@@ -1,75 +1,49 @@
-import requests
-import json
-from func import log
 
-class MessageChain:
+class Chain:
     chain = []
-    def addPlain(self,text):
-        self.chain.append({"type": "Plain","text": str(text)})
-    def addQuote(self,id):
-        self.chain.append({"type": "Quote","id": int(id)})
-    def addAt(self,target):
-        self.chain.append({"type": "At","target": int(target)})
-    def addAtAll(self):
+    def clear(self):
+        self.chain = []
+    def add(self,contentClass):
+        self.chain.append(contentClass.content)
+    def read():
+        #消息链解析输出 UNFINISHED
+        pass
+
+class Person:
+    id = 0
+    #发送/被发送者信息 权限 UNFINISHED
+class Event:
+    id = 0
+    #群/bot事件信息 UNFINISHED\
+
+class Plain:
+    content = {"type": "Plain"}
+    def __init__(self,text:str):
+        self.content["text"] = text
+class Quote:
+    content = {"type": "Quote"}
+    def __init__(self,id:int):
+        self.content["id"] = id
+class At:
+    content = {"type": "At"}
+    def __init__(self,target:int):
+        self.content["target"] = target
+'''
+UNFINISHED(修改)
+class AtAll(self):
         self.chain.append({"type": "AtAll"})
-    def addImage(self,url=None,base64=None):
+class Image(self,url:str=None,base64:str=None):
         imageChain = {"type": "Image"}
         if(url!=None):
             imageChain["url"]=url
         if(base64!=None):
             imageChain["base64"]=base64  
-    def addVoice(self,url=None,base64=None):
+class Voice(self,url:str=None,base64:str=None):
         voiceChain = {"type": "Voice"}
         if(url!=None):
             voiceChain["url"]=url
         if(base64!=None):
-            voiceChain["base64"]=base64  
-    #后续可以把消息链的类型补全
-
-class SendAct:
-    message = {"sessionKey":"","target":0,"messageChain":[]}
-    url = ""
-    errors = None   #如果读取到错误信息的话 说明你的消息链有问题
-    def __init__(self,bot): #传入bot.Bot类
-        self.message["sessionKey"]=bot.session
-        self.message["target"]=bot.target
-        self.url = bot.api
-    #Group和Friend需传入message.MessageChain类
-    def Group(self,messageChain,groupnum=None): #群号可选
-        self.errors = None
-        self.message["messageChain"]=messageChain.chain
-        if(groupnum!=None):
-            self.message["target"]=groupnum
-        try:
-            posts = requests.post(self.url+"sendGroupMessage",json.dumps(self.message,ensure_ascii=False).encode())
-            if(json.loads(posts.text)["code"]!=0):
-                self.errors = json.loads(posts.text)
-                raise Exception(posts.text)
-        except Exception as e:
-            log.wprint(e)
-    def Friend(self,messageChain,usernum):
-        self.errors = None
-        self.message["messageChain"]=messageChain.chain
-        self.message["target"]=usernum
-        try:
-            posts = requests.post(self.url+"sendFriendMessage",json.dumps(self.message,ensure_ascii=False).encode())
-            if(json.loads(posts.text)["code"]!=0):
-                self.errors = json.loads(posts.text)
-                raise Exception(posts.text)
-        except Exception as e:
-            log.wprint(e)
-    #复制粘贴再加上陌生好友信息 这个可以有
-
-#获取bot状态 操作次级api UNFINISHED
-
-def fetchMessage(bot):
-    url = bot.api+"fetchMessage?sessionKey="+bot.session
-    messagelist = []
-    try:
-        i = json.loads(requests.get(url).text)
-        if(i["code"]!=0):
-            raise Exception({"code":i["code"],"msg":i["msg"]})
-        messagelist = i["data"]
-    except Exception as e:
-        log.wprint(e)
-    return messagelist
+            voiceChain["base64"]=base64
+'''
+#UNFINISHED:各个消息链类型类的读取处理
+#Future:把消息链的类型补全
