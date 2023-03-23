@@ -7,7 +7,7 @@ from func import message
 
 b = bot.Bot()
 m = message.Chain()
-t = message.Plain("messageSend funcion normal.")
+t = message.Plain("1")
 m.add(t)
 b.GroupSend(m)
 while(1):
