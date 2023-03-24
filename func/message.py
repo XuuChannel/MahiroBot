@@ -1,20 +1,43 @@
 
 class Chain:
     chain = []
+    sender = {
+        "id":0,
+        "group":0,
+        "perm":0,
+    }
+    ReceiveFlag = False
+    SyncFlag = False
+    def __init__(self,isReceived:bool = False,pid:int=0,group:int=0,perm:int=0):
+        if(isReceived == True):
+            self.sender["id"] = pid
+            self.sender["group"] = group
+            self.sender["perm"] = perm
+            self.ReceiveFlag = True
+    def senderinit(self,pid:int,group:int):
+        if(self.ReceiveFlag == True):
+            self.sender["id"] = pid
+            self.sender["group"] = group
+    def perminit(self,perm:int):
+        if(self.ReceiveFlag == True):
+            self.sender["perm"]=perm
     def clear(self):
         self.chain = []
     def add(self,contentClass):
         self.chain.append(contentClass.content)
-    def read():
-        #消息链解析输出 UNFINISHED
-        pass
-
-class Person:
-    id = 0
-    #发送/被发送者信息 权限 UNFINISHED
-class Event:
-    id = 0
-    #群/bot事件信息 UNFINISHED\
+    def send(self,botClass,target:int = 0,isGroup:bool = True):
+        if(target == 0):
+            botClass.GroupSend(self.chain)
+        elif(isGroup == False):
+            botClass.FriendSend(self.chain,target)
+        else:
+            botClass.GroupSend(self.chain,target)
+        self.clear()
+    def read(self):
+        if(len(self.chain)==0):
+            return None
+        else:
+            return self.chain.pop(0)
 
 class Plain:
     content = {"type": "Plain"}
@@ -28,22 +51,21 @@ class At:
     content = {"type": "At"}
     def __init__(self,target:int):
         self.content["target"] = target
-'''
-UNFINISHED(修改)
-class AtAll(self):
-        self.chain.append({"type": "AtAll"})
-class Image(self,url:str=None,base64:str=None):
-        imageChain = {"type": "Image"}
+class AtAll:
+    content = {"type": "AtAll"}
+class Image:
+    content = {"type": "Image"}
+    def __init__(self,url:str=None,base64:str=None):
         if(url!=None):
-            imageChain["url"]=url
+            self.content["url"]=url
         if(base64!=None):
-            imageChain["base64"]=base64  
-class Voice(self,url:str=None,base64:str=None):
-        voiceChain = {"type": "Voice"}
+            self.content["base64"]=base64 
+class Voice:
+    content = {"type": "Voice"}
+    def __init__(self,url:str=None,base64:str=None):
         if(url!=None):
-            voiceChain["url"]=url
+            self.content["url"]=url
         if(base64!=None):
-            voiceChain["base64"]=base64
-'''
-#UNFINISHED:各个消息链类型类的读取处理
+            self.content["base64"]=base64  
+
 #Future:把消息链的类型补全

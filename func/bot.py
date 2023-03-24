@@ -2,7 +2,6 @@ import toml
 import requests
 import json
 import sys
-from func import log
 from func import message
 
 class Bot:
@@ -34,9 +33,9 @@ class Bot:
                 raise Exception("SessionBind_Error")
             self.session = sessionMessage["session"]
             self.success = True
-            log.Print("BotConnection: Verify & Bind success.",1)
+            print("[INFO] BotConnection: Verify & Bind success.")
         except Exception as e:
-            log.Print(e)
+            print(e)
             sys.exit()
     def __del__(self):
         try:
@@ -44,12 +43,12 @@ class Bot:
             releasePost = json.loads(requests.post(self.api+"release",json.dumps(releaseMessage,ensure_ascii=False)).text)
             if(releasePost["code"]!=0):
                 raise Exception("SessionRelease_Error")
-            log.Print("Bot release success.",1)
+            print("[INFO] BotRelease success.")
         except Exception as e:
-            log.Print(e)
+            print(e)
     def GroupSend(self,messageChain,target:int=None): #群号可选
         smessage = {"sessionKey":self.session,"target":self.target,"messageChain":[]}
-        smessage["messageChain"]=messageChain.chain
+        smessage["messageChain"]=messageChain
         if(target!=None):
             smessage["target"]=target
         try:
@@ -58,23 +57,22 @@ class Bot:
                 self.errors = json.loads(posts.text)
                 raise Exception(posts.text)
         except Exception as e:
-            log.Print(e)
+            print(e)
             return False
         return True
     def FriendSend(self,messageChain,target:int):
         smessage = {"sessionKey":self.session,"target":target,"messageChain":[]}
-        smessage["messageChain"]=messageChain.chain
+        smessage["messageChain"]=messageChain
         try:
-            posts = requests.post(self.api+"sendGroupMessage",json.dumps(smessage,ensure_ascii=False).encode())
+            posts = requests.post(self.api+"sendFriendMessage",json.dumps(smessage,ensure_ascii=False).encode())
             if(json.loads(posts.text)["code"]!=0):
                 self.errors = json.loads(posts.text)
                 raise Exception(posts.text)
         except Exception as e:
-            log.Print(e)
+            print(e)
             return False
         return True
     #Future:临时会话发送 获取bot,群,用户信息 撤回 戳一戳 账号管理 群管理
-    #UNFINISHED:发送同时兼容id和Person类
     def _fetch(self):
         url = self.api+"fetchMessage?sessionKey="+self.session
         messagelist = []
@@ -84,7 +82,7 @@ class Bot:
                 raise Exception({"code":i["code"],"msg":i["msg"]})
             messagelist = i["data"]
         except Exception as e:
-            log.Print(e)
+            print(e)
         if(len(messagelist)==0):
             return None
         for message in messagelist:
@@ -168,13 +166,28 @@ class Bot:
                     self.botevent.append(message)
                 case _:
                     self.undevent.append(message)
+    def _filter(self,mlist):
+        out = []
+        for i in mlist:
+            if(i["type"]=="Plain" or i["type"]=="Image" or i["type"]=="Voice" or i["type"]=="At" or i["type"]=="AtAll" or i["type"]=="Quote"):
+                out.append(i)
+        return out
     def fetchMessage(self,istarget:bool=False):
         self._fetch()
+        temp = {}
         if(istarget==True):
-            if(len(self.targetmsg)!=0):return self.targetmsg.pop()
+            if(len(self.targetmsg)!=0):temp = self.targetmsg.pop()
         else:
-            if(len(self.normalmsg)!=0):return self.normalmsg.pop()
-        return {}
+            if(len(self.normalmsg)!=0):temp = self.normalmsg.pop()
+        if(temp!={}):
+            if(temp["type"]=="GroupMessage"):
+                r = message.Chain(True,temp["sender"]["id"],temp["sender"]["group"]["id"])
+                #UNFINISHED:权限判定 权限添加
+                chain = self._filter(temp["messageChain"])
+                if(len(chain)!=0):r.chain = chain
+                else:r.chain = [{"type":"Plain","text":"###不支持的消息###"}]
+                return r
+#↓未完成功能 不要用↓
     def fetchSync(self):
         self._fetch()
         if(len(self.syncmsg)!=0):return self.syncmsg.pop()
@@ -187,8 +200,11 @@ class Bot:
         self._fetch()
         if(len(self.botevent)!=0):return self.botevent.pop()
         return {}
-    #UNFINISHED:fetch输出改为新的Chain+Person/Event类
-    def fetchSingle(self,messageid:int,targetid:int):
-        #Future:返回值加入发送者信息 支持更多类型
+#↑Future:Sync和Event输出改为新的Chain/Event类↑
+    def fetchByID(self,messageid:int,targetid:int):
+        
         #UNFINISHED
         pass
+
+
+#UNFINISHED:权限类
