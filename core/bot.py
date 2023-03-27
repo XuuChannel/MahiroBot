@@ -2,7 +2,7 @@ import toml
 import requests
 import json
 import sys
-from func import message
+from core import message
 
 class Bot:
     api = ""
@@ -14,12 +14,18 @@ class Bot:
     syncmsg = []
     botevent = []
     undevent = []
+    perm_t0list = []
+    perm_t1list = []
+    perm_banlist = []
+    target_admin_permission = False
     def __init__(self) -> None:
     #读取配置文件并尝试连接api
         configs = toml.load("./config.toml")
         self.api = configs["api_url"]+":"+str(configs["api_port"])+"/"
         self.account = configs["bot_account"]
         self.target = configs["target_group"]
+        self.perm_t0list = configs["t0_users"]
+        self.target_admin_permission = configs["target_admin_permission"]
         try:
             verifyMessage = {"verifyKey": configs["api_key"]}
             verifyPost = requests.post(self.api+"verify",json.dumps(verifyMessage,ensure_ascii=False))
@@ -37,6 +43,25 @@ class Bot:
         except Exception as e:
             print(e)
             sys.exit()
+        #读取权限文件
+        try:
+            f = open("./data/perm/t1.json","r", encoding="utf-8")
+            self.perm_t1list = json.load(f)["list"]
+            f.close()
+        except FileNotFoundError:
+            f = open("./data/perm/t1.json","w", encoding="utf-8")
+            s = {"list":[]}
+            json.dump(s, f, ensure_ascii=False)
+            f.close()
+        try:
+            f = open("./data/perm/banlist.json","r", encoding="utf-8")
+            self.perm_banlist = json.load(f)["list"]
+            f.close()
+        except FileNotFoundError:
+            f = open("./data/perm/banlist.json","w", encoding="utf-8")
+            s = {"list":[]}
+            json.dump(s, f, ensure_ascii=False)
+            f.close()
     def __del__(self):
         try:
             releaseMessage = {"sessionKey": self.session,"qq": self.account}
@@ -72,7 +97,7 @@ class Bot:
             print(e)
             return False
         return True
-    #Future:临时会话发送 获取bot,群,用户信息 撤回 戳一戳 账号管理 群管理
+#Future:临时会话发送 获取bot,群,用户信息 撤回 戳一戳 账号管理 群管理
     def _fetch(self):
         url = self.api+"fetchMessage?sessionKey="+self.session
         messagelist = []
@@ -174,19 +199,85 @@ class Bot:
         return out
     def fetchMessage(self,istarget:bool=False):
         self._fetch()
-        temp = {}
+        msg = {}
         if(istarget==True):
-            if(len(self.targetmsg)!=0):temp = self.targetmsg.pop()
+            if(len(self.targetmsg)!=0):msg = self.targetmsg.pop()
         else:
-            if(len(self.normalmsg)!=0):temp = self.normalmsg.pop()
-        if(temp!={}):
-            if(temp["type"]=="GroupMessage"):
-                r = message.Chain(True,temp["sender"]["id"],temp["sender"]["group"]["id"])
-                #UNFINISHED:权限判定 权限添加
-                chain = self._filter(temp["messageChain"])
+            if(len(self.normalmsg)!=0):msg = self.normalmsg.pop()
+        if(msg!={}):
+            if(msg["type"]=="GroupMessage" or msg["type"] == "TempMessage"):
+                r = message.Chain(True,msg["sender"]["id"],msg["sender"]["group"]["id"])
+                r.MessageType = msg["type"]
+                if(istarget==True and self.target_admin_permission==True):
+                    if(msg["sender"]["group"]["permission"]=="ADMINISTRATOR" or msg["sender"]["group"]["permission"]=="OWNER"):
+                        r.perminit(0)
+                for id in self.perm_t0list:
+                    if(id==msg["sender"]["id"]):r.perminit(0)
+                for id in self.perm_t1list:
+                    if(id==msg["sender"]["id"]):r.perminit(1)
+                for id in self.perm_banlist:
+                    if(id==msg["sender"]["id"]):r.perminit(3)
+                chain = self._filter(msg["messageChain"])
                 if(len(chain)!=0):r.chain = chain
-                else:r.chain = [{"type":"Plain","text":"###不支持的消息###"}]
+                else:r.chain = [{"type":"Other","text":"不支持的消息"}]
+                if(r.sender["perm"]==3):r.chain = [{"type":"Other","text":"BANNED USER"}]
                 return r
+            elif(msg["type"]=="FriendMessage" or msg["type"] == "StrangerMessage" or msg["type"] == "OtherClientMessage"):
+                r = message.Chain(True,msg["sender"]["id"])
+                r.MessageType = msg["type"]
+                for id in self.perm_banlist:
+                    if(id==msg["sender"]["id"]):r.perminit(3)
+                chain = self._filter(msg["messageChain"])
+                if(len(chain)!=0):r.chain = chain
+                else:r.chain = [{"type":"Other","text":"不支持的消息"}]
+                if(r.sender["perm"]==3):r.chain = [{"type":"Other","text":"BANNED USER"}]
+                return r
+            else:
+                #Future:补全Event类
+                r = message.Event(msg)
+                return r         
+    def fetchByID(self,messageid:int,targetid:int):
+        url = self.api+"messageFromId?sessionKey="+self.session+"&messageId="+str(messageid)+"&target="+str(targetid)
+        msg = {}
+        try:
+            i = json.loads(requests.get(url).text)
+            if(i["code"]!=0):
+                raise Exception({"code":i["code"],"msg":i["msg"]})
+            elif(i["code"]==5):
+                return None
+            msg = i["data"]
+        except Exception as e:
+            print(e)
+        if(msg["type"]=="GroupMessage" or msg["type"] == "TempMessage"):
+            r = message.Chain(True,msg["sender"]["id"],msg["sender"]["group"]["id"])
+            r.MessageType = msg["type"]
+            for id in self.perm_t0list:
+                if(id==msg["sender"]["id"]):r.perminit(0)
+            for id in self.perm_t1list:
+                if(id==msg["sender"]["id"]):r.perminit(1)
+            for id in self.perm_banlist:
+                if(id==msg["sender"]["id"]):r.perminit(3)
+            chain = self._filter(msg["messageChain"])
+            if(len(chain)!=0):r.chain = chain
+            else:r.chain = [{"type":"Other","text":"不支持的消息"}]
+            if(r.sender["perm"]==3):r.chain = [{"type":"Other","text":"BANNED USER"}]
+            return r
+        elif(msg["type"]=="FriendMessage" or msg["type"] == "StrangerMessage" or msg["type"] == "OtherClientMessage"):
+            r = message.Chain(True,msg["sender"]["id"])
+            r.MessageType = msg["type"]
+            for id in self.perm_banlist:
+                if(id==msg["sender"]["id"]):r.perminit(3)
+            chain = self._filter(msg["messageChain"])
+            if(len(chain)!=0):r.chain = chain
+            else:r.chain = [{"type":"Other","text":"不支持的消息"}]
+            if(r.sender["perm"]==3):r.chain = [{"type":"Other","text":"BANNED USER"}]
+            return r
+        else:
+            #Future:补全Event类
+            r = message.Event(msg)
+            return r  
+#UNFINISHED:权限添加删除
+
 #↓未完成功能 不要用↓
     def fetchSync(self):
         self._fetch()
@@ -201,10 +292,4 @@ class Bot:
         if(len(self.botevent)!=0):return self.botevent.pop()
         return {}
 #↑Future:Sync和Event输出改为新的Chain/Event类↑
-    def fetchByID(self,messageid:int,targetid:int):
-        
-        #UNFINISHED
-        pass
-
-
-#UNFINISHED:权限类
+    

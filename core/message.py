@@ -4,10 +4,10 @@ class Chain:
     sender = {
         "id":0,
         "group":0,
-        "perm":0,
+        "perm":2,#0=t0,1=t1,2=none,3=banned
     }
     ReceiveFlag = False
-    SyncFlag = False
+    MessageType = ""
     def __init__(self,isReceived:bool = False,pid:int=0,group:int=0,perm:int=0):
         if(isReceived == True):
             self.sender["id"] = pid
@@ -38,6 +38,13 @@ class Chain:
             return None
         else:
             return self.chain.pop(0)
+#UNFINISHED:关键词检测 关键元素匹配
+
+class Event:
+    content = {}
+    def __init__(self,ipt):
+        self.content = ipt
+    #Future:群/bot事件信息
 
 class Plain:
     content = {"type": "Plain"}

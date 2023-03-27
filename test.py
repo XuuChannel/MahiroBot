@@ -1,25 +1,16 @@
 
 import time
-from func import bot
-from func import message
+from core import bot
+from core import message
 
 
 
 b = bot.Bot()
 c = message.Chain()
-c.add(message.Plain("BotStartup"))
+d = open("./test.xml","r",encoding="utf-8")
+c.chain = [{"type":"Xml","xml":d.read()}]
+print(c.chain)
 c.send(b)
-while 1:
-    time.sleep(0.1)
-    i = b.fetchMessage()
-    if(i!=None):
-        k = i.chain
-        i.send(b)
-        i.chain = k
-        print(i.sender)
-        j = i.read()
-        while(j!=None):
-            print(j)
-            j = i.read()
-        print("\n")
+print(b.target_admin_permission)
+print(b.perm_banlist)
         
