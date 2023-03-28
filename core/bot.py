@@ -208,13 +208,13 @@ class Bot:
             if(msg["type"]=="GroupMessage" or msg["type"] == "TempMessage"):
                 r = message.Chain(True,msg["sender"]["id"],msg["sender"]["group"]["id"])
                 r.MessageType = msg["type"]
-                if(istarget==True and self.target_admin_permission==True):
-                    if(msg["sender"]["group"]["permission"]=="ADMINISTRATOR" or msg["sender"]["group"]["permission"]=="OWNER"):
-                        r.perminit(0)
                 for id in self.perm_t0list:
                     if(id==msg["sender"]["id"]):r.perminit(0)
                 for id in self.perm_t1list:
                     if(id==msg["sender"]["id"]):r.perminit(1)
+                if(istarget==True and self.target_admin_permission==True):
+                    if(msg["sender"]["group"]["permission"]=="ADMINISTRATOR" or msg["sender"]["group"]["permission"]=="OWNER"):
+                        r.perminit(0)
                 for id in self.perm_banlist:
                     if(id==msg["sender"]["id"]):r.perminit(3)
                 chain = self._filter(msg["messageChain"])
@@ -251,10 +251,6 @@ class Bot:
         if(msg["type"]=="GroupMessage" or msg["type"] == "TempMessage"):
             r = message.Chain(True,msg["sender"]["id"],msg["sender"]["group"]["id"])
             r.MessageType = msg["type"]
-            for id in self.perm_t0list:
-                if(id==msg["sender"]["id"]):r.perminit(0)
-            for id in self.perm_t1list:
-                if(id==msg["sender"]["id"]):r.perminit(1)
             for id in self.perm_banlist:
                 if(id==msg["sender"]["id"]):r.perminit(3)
             chain = self._filter(msg["messageChain"])
@@ -276,7 +272,21 @@ class Bot:
             #Future:补全Event类
             r = message.Event(msg)
             return r  
-#UNFINISHED:权限添加删除
+    def permAdd(self,perm:int,id:int):
+        if(perm==1):
+            self.perm_t1list.append(id)
+            f = open("./data/perm/t1.json","w", encoding="utf-8")
+            s = {"list":self.perm_t1list}
+            json.dump(s, f, ensure_ascii=False)
+            f.close()
+        elif(perm==3):
+            self.perm_banlist.append(id)
+            f = open("./data/perm/banlist.json","w", encoding="utf-8")
+            s = {"list":self.perm_banlist}
+            json.dump(s, f, ensure_ascii=False)
+            f.close()
+        else:
+            return None
 
 #↓未完成功能 不要用↓
     def fetchSync(self):

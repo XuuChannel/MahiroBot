@@ -7,10 +7,8 @@ from core import message
 
 b = bot.Bot()
 c = message.Chain()
-d = open("./test.xml","r",encoding="utf-8")
-c.chain = [{"type":"Xml","xml":d.read()}]
+c.add(message.Image(url="https://avatars.githubusercontent.com/u/67725421"))
 print(c.chain)
 c.send(b)
-print(b.target_admin_permission)
-print(b.perm_banlist)
+
         
