@@ -6,9 +6,14 @@ from core import message
 
 
 b = bot.Bot()
-c = message.Chain()
-c.add(message.Image(url="https://avatars.githubusercontent.com/u/67725421"))
-print(c.chain)
-c.send(b)
+while(1):
+    time.sleep(0.5)
+    i = b.fetchMessage(True)
+    if(i!=None and i.__class__.__name__=="Chain"):
+        c = message.Chain()
+        c.add(message.Plain(str(i.sender["perm"])))
+        c.send(b)
+
+        
 
         

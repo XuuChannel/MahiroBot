@@ -213,7 +213,7 @@ class Bot:
                 for id in self.perm_t1list:
                     if(id==msg["sender"]["id"]):r.perminit(1)
                 if(istarget==True and self.target_admin_permission==True):
-                    if(msg["sender"]["group"]["permission"]=="ADMINISTRATOR" or msg["sender"]["group"]["permission"]=="OWNER"):
+                    if(msg["sender"]["permission"]=="ADMINISTRATOR" or msg["sender"]["permission"]=="OWNER"):
                         r.perminit(0)
                 for id in self.perm_banlist:
                     if(id==msg["sender"]["id"]):r.perminit(3)

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<msg templateID="12345" action="web" brief="关于MahiroBot" serviceID="1" url="https://github.com/XuuChannel/MahiroBot">
- <item layout="1">
-  <title>About</title>
-        <picture cover="https://img.moegirl.org.cn/common/e/ea/%E7%BB%AA%E5%B1%B1%E7%9C%9F%E5%AF%BB_%E7%94%9F%E8%B4%BA_%E8%A3%81%E5%88%87.jpg"/>
-        <summary>MahiroBot v3.0 Beta</summary>
- </item>
-</msg>

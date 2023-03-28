@@ -8,7 +8,7 @@ class Chain:
     }
     ReceiveFlag = False
     MessageType = ""
-    def __init__(self,isReceived:bool = False,pid:int=0,group:int=0,perm:int=0):
+    def __init__(self,isReceived:bool = False,pid:int=0,group:int=0,perm:int=2):
         if(isReceived == True):
             self.sender["id"] = pid
             self.sender["group"] = group
@@ -22,7 +22,7 @@ class Chain:
         if(self.ReceiveFlag == True):
             self.sender["perm"]=perm
     def clear(self):
-        self.chain = []
+        self.chain.clear()
     def add(self,contentClass):
         self.chain.append(contentClass.content)
     def send(self,botClass,target:int = 0,isGroup:bool = True):
