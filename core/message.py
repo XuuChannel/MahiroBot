@@ -74,5 +74,4 @@ class Voice:
             self.content["url"]=url
         if(base64!=None):
             self.content["base64"]=base64  
-
 #Future:把消息链的类型补全

@@ -287,7 +287,7 @@ class Bot:
             f.close()
         else:
             return None
-#UNFINISHED:权限删除 去重
+#UNFINISHED:权限删除 权限去重
 
 #↓未完成功能 不要用↓
     def fetchSync(self):
