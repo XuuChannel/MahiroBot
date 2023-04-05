@@ -18,7 +18,7 @@ class Bot:
     perm_t1list = []
     perm_banlist = []
     target_admin_permission = False
-    def __init__(self) -> None:
+    def __init__(self) -> None:#重写
     #读取配置文件并尝试连接api
         configs = toml.load("./config.toml")
         self.api = configs["api_url"]+":"+str(configs["api_port"])+"/"
@@ -98,6 +98,7 @@ class Bot:
             return False
         return True
 #Future:临时会话发送 获取bot,群,用户信息 撤回 戳一戳 账号管理 群管理
+#↓重写
     def _fetch(self):
         url = self.api+"fetchMessage?sessionKey="+self.session
         messagelist = []
@@ -289,18 +290,5 @@ class Bot:
             return None
 #UNFINISHED:权限删除 权限去重
 
-#↓未完成功能 不要用↓
-    def fetchSync(self):
-        self._fetch()
-        if(len(self.syncmsg)!=0):return self.syncmsg.pop()
-        return {}
-    def fetchUndefined(self):
-        self._fetch()
-        if(len(self.undevent)!=0):return self.undevent.pop()
-        return {}
-    def fetchEvent(self):
-        self._fetch()
-        if(len(self.botevent)!=0):return self.botevent.pop()
-        return {}
-#↑Future:Sync和Event输出改为新的Chain/Event类↑
+
     
