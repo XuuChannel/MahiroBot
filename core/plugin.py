@@ -3,7 +3,7 @@
 import os
 import importlib
 import sys
-from func import log
+
 
 #初始化插件部分 UNFINISHED
 
@@ -14,7 +14,7 @@ def pluginload():
         if(".py" in file):
             filename = file.strip(".py")
             d.append(importlib.import_module("plugins."+filename))
-    log.Print("Detected "+str(len(d))+" plugin(s).",1)
+
     return d
 
 class PluginLib:#UNFINISHED

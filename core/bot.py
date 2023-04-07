@@ -1,7 +1,6 @@
 import toml
 import requests
 import json
-import sys
 from core import message
 
 class Bot:
@@ -9,41 +8,43 @@ class Bot:
     account = 0
     target = 0
     session  = ""
-    normalmsg = []
-    targetmsg = []
-    syncmsg = []
-    botevent = []
-    undevent = []
-    perm_t0list = []
-    perm_t1list = []
-    perm_banlist = []
-    target_admin_permission = False
-    def __init__(self) -> None:#重写
+    botmsg = []
+    botevent = []#del?
+
+    class Perm:
+        t0 = []
+        t1 = []
+        banned = []
+        target_admin_permission = False
+        #权限判定 添加 删除 UNFINISHED
+    perm = Perm()
+    
+    def __init__(self,configPath:str):
     #读取配置文件并尝试连接api
-        configs = toml.load("./config.toml")
+        configs = toml.load(configPath)
         self.api = configs["api_url"]+":"+str(configs["api_port"])+"/"
         self.account = configs["bot_account"]
         self.target = configs["target_group"]
-        self.perm_t0list = configs["t0_users"]
-        self.target_admin_permission = configs["target_admin_permission"]
         try:
-            verifyMessage = {"verifyKey": configs["api_key"]}
-            verifyPost = requests.post(self.api+"verify",json.dumps(verifyMessage,ensure_ascii=False))
-            sessionMessage = json.loads(verifyPost.text)
-            if(sessionMessage["code"]!=0):
-                raise Exception("SessionVerify_Error")
-            bindMessage = {"sessionKey": sessionMessage["session"],"qq": self.account}
-            bindPost = requests.post(self.api+"bind",json.dumps(bindMessage,ensure_ascii=False))
-            bindResult = json.loads(bindPost.text)
-            if(bindResult["code"]!=0):
-                raise Exception("SessionBind_Error")
-            self.session = sessionMessage["session"]
-            self.success = True
-            print("[INFO] BotConnection: Verify & Bind success.")
+            message = {"verifyKey": configs["api_key"]}
+            post = requests.post(self.api+"verify",json.dumps(message,ensure_ascii=False))
+            result = json.loads(post.text)
+            if(result["code"]!=0):
+                raise Exception("[ERROR] MiraiAPI:SessionVerify Error.")
+            message = {"sessionKey": result["session"],"qq": self.account}
+            post = requests.post(self.api+"bind",json.dumps(message,ensure_ascii=False))
+            result = json.loads(post.text)
+            if(result["code"]!=0):
+                raise Exception("[ERROR] MiraiAPI:SessionBind Error.")
+            self.session = result["session"]
+            print("[INFO] MiraiAPI:Verify&Bind Succeed.")
         except Exception as e:
             print(e)
-            sys.exit()
-        #读取权限文件
+            del(self)
+    #读取权限文件
+        self.perm.t0 = configs["t0_users"]
+        self.perm.target_admin_permission = configs["target_admin_permission"]
+        #↓重写
         try:
             f = open("./data/perm/t1.json","r", encoding="utf-8")
             self.perm_t1list = json.load(f)["list"]
@@ -62,43 +63,42 @@ class Bot:
             s = {"list":[]}
             json.dump(s, f, ensure_ascii=False)
             f.close()
+
     def __del__(self):
         try:
-            releaseMessage = {"sessionKey": self.session,"qq": self.account}
-            releasePost = json.loads(requests.post(self.api+"release",json.dumps(releaseMessage,ensure_ascii=False)).text)
-            if(releasePost["code"]!=0):
-                raise Exception("SessionRelease_Error")
-            print("[INFO] BotRelease success.")
+            message = {"sessionKey": self.session,"qq": self.account}
+            post = json.loads(requests.post(self.api+"release",json.dumps(message,ensure_ascii=False)).text)
+            if(post["code"]!=0):
+                raise Exception("[ERROR] MiraiAPI:SessionRelease Error.")
+            print("[INFO] MiraiAPI:SessionRelease Succeed.")
         except Exception as e:
             print(e)
-    def GroupSend(self,messageChain,target:int=None): #群号可选
-        smessage = {"sessionKey":self.session,"target":self.target,"messageChain":[]}
-        smessage["messageChain"]=messageChain
+    def groupSend(self,messageChain:list,target:int=None): #群号可选
+        message = {"sessionKey":self.session,"target":self.target,"messageChain":messageChain}
         if(target!=None):
-            smessage["target"]=target
+            message["target"]=target
         try:
-            posts = requests.post(self.api+"sendGroupMessage",json.dumps(smessage,ensure_ascii=False).encode())
-            if(json.loads(posts.text)["code"]!=0):
-                self.errors = json.loads(posts.text)
-                raise Exception(posts.text)
+            post = requests.post(self.api+"sendGroupMessage",json.dumps(message,ensure_ascii=False).encode())
+            if(json.loads(post.text)["code"]!=0):
+                raise Exception("[ERROR] MiraiAPI:"+post.text)
         except Exception as e:
             print(e)
             return False
         return True
-    def FriendSend(self,messageChain,target:int):
-        smessage = {"sessionKey":self.session,"target":target,"messageChain":[]}
-        smessage["messageChain"]=messageChain
+    def friendSend(self,messageChain:list,target:int):
+        message = {"sessionKey":self.session,"target":target,"messageChain":[]}
+        message["messageChain"]=messageChain
         try:
-            posts = requests.post(self.api+"sendFriendMessage",json.dumps(smessage,ensure_ascii=False).encode())
-            if(json.loads(posts.text)["code"]!=0):
-                self.errors = json.loads(posts.text)
-                raise Exception(posts.text)
+            post = requests.post(self.api+"sendFriendMessage",json.dumps(message,ensure_ascii=False).encode())
+            if(json.loads(post.text)["code"]!=0):
+                raise Exception("[ERROR] MiraiAPI:"+post.text)
         except Exception as e:
             print(e)
             return False
         return True
-#Future:临时会话发送 获取bot,群,用户信息 撤回 戳一戳 账号管理 群管理
-#↓重写
+    #Future:临时会话发送 获取bot,群,用户信息 撤回 戳一戳 账号管理 群管理
+
+#↓重写 删除/移动不必要的
     def _fetch(self):
         url = self.api+"fetchMessage?sessionKey="+self.session
         messagelist = []
@@ -288,7 +288,7 @@ class Bot:
             f.close()
         else:
             return None
-#UNFINISHED:权限删除 权限去重
+    #UNFINISHED:权限删除 权限去重
 
 
     
