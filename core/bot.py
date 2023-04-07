@@ -4,47 +4,50 @@ import json
 from core import message
 
 class Bot:
-    api = ""
+    __api = ""
     account = 0
     target = 0
-    session  = ""
-    botmsg = []
+    __session  = ""
+    __botmsg = []
+    __perm = None#未定
+
     botevent = []#del?
 
-    class Perm:
+    class __Perm:#未定
         t0 = []
         t1 = []
         banned = []
         target_admin_permission = False
         #权限判定 添加 删除 UNFINISHED
-    perm = Perm()
     
     def __init__(self,configPath:str):
     #读取配置文件并尝试连接api
         configs = toml.load(configPath)
-        self.api = configs["api_url"]+":"+str(configs["api_port"])+"/"
+        self.__api = configs["api_url"]+":"+str(configs["api_port"])+"/"
         self.account = configs["bot_account"]
         self.target = configs["target_group"]
         try:
             message = {"verifyKey": configs["api_key"]}
-            post = requests.post(self.api+"verify",json.dumps(message,ensure_ascii=False))
+            post = requests.post(self.__api+"verify",json.dumps(message,ensure_ascii=False))
             result = json.loads(post.text)
             if(result["code"]!=0):
                 raise Exception("[ERROR] MiraiAPI:SessionVerify Error.")
             message = {"sessionKey": result["session"],"qq": self.account}
-            post = requests.post(self.api+"bind",json.dumps(message,ensure_ascii=False))
+            self.__session = result["session"]
+            post = requests.post(self.__api+"bind",json.dumps(message,ensure_ascii=False))
             result = json.loads(post.text)
             if(result["code"]!=0):
                 raise Exception("[ERROR] MiraiAPI:SessionBind Error.")
-            self.session = result["session"]
             print("[INFO] MiraiAPI:Verify&Bind Succeed.")
         except Exception as e:
             print(e)
-            del(self)
+            exit(1)
     #读取权限文件
-        self.perm.t0 = configs["t0_users"]
-        self.perm.target_admin_permission = configs["target_admin_permission"]
-        #↓重写
+        #未定
+        self.__perm = self.__Perm()
+        self.__perm.t0 = configs["t0_users"]
+        self.__perm.target_admin_permission = configs["target_admin_permission"]
+        '''↓重写
         try:
             f = open("./data/perm/t1.json","r", encoding="utf-8")
             self.perm_t1list = json.load(f)["list"]
@@ -63,44 +66,47 @@ class Bot:
             s = {"list":[]}
             json.dump(s, f, ensure_ascii=False)
             f.close()
+        '''
 
     def __del__(self):
         try:
-            message = {"sessionKey": self.session,"qq": self.account}
-            post = json.loads(requests.post(self.api+"release",json.dumps(message,ensure_ascii=False)).text)
+            message = {"sessionKey": self.__session,"qq": self.account}
+            post = json.loads(requests.post(self.__api+"release",json.dumps(message,ensure_ascii=False)).text)
             if(post["code"]!=0):
                 raise Exception("[ERROR] MiraiAPI:SessionRelease Error.")
             print("[INFO] MiraiAPI:SessionRelease Succeed.")
         except Exception as e:
             print(e)
     def groupSend(self,messageChain:list,target:int=None): #群号可选
-        message = {"sessionKey":self.session,"target":self.target,"messageChain":messageChain}
+        message = {"sessionKey":self.__session,"target":self.target,"messageChain":messageChain}
         if(target!=None):
             message["target"]=target
         try:
-            post = requests.post(self.api+"sendGroupMessage",json.dumps(message,ensure_ascii=False).encode())
+            post = requests.post(self.__api+"sendGroupMessage",json.dumps(message,ensure_ascii=False).encode())
             if(json.loads(post.text)["code"]!=0):
                 raise Exception("[ERROR] MiraiAPI:"+post.text)
         except Exception as e:
             print(e)
             return False
+        print("[INFO] MiraiAPI:SendAction Succeed.")
         return True
     def friendSend(self,messageChain:list,target:int):
-        message = {"sessionKey":self.session,"target":target,"messageChain":[]}
+        message = {"sessionKey":self.__session,"target":target,"messageChain":[]}
         message["messageChain"]=messageChain
         try:
-            post = requests.post(self.api+"sendFriendMessage",json.dumps(message,ensure_ascii=False).encode())
+            post = requests.post(self.__api+"sendFriendMessage",json.dumps(message,ensure_ascii=False).encode())
             if(json.loads(post.text)["code"]!=0):
                 raise Exception("[ERROR] MiraiAPI:"+post.text)
         except Exception as e:
             print(e)
             return False
+        print("[INFO] MiraiAPI:SendAction Succeed.")
         return True
     #Future:临时会话发送 获取bot,群,用户信息 撤回 戳一戳 账号管理 群管理
 
 #↓重写 删除/移动不必要的
     def _fetch(self):
-        url = self.api+"fetchMessage?sessionKey="+self.session
+        url = self.__api+"fetchMessage?sessionKey="+self.__session
         messagelist = []
         try:
             i = json.loads(requests.get(url).text)
@@ -238,7 +244,7 @@ class Bot:
                 r = message.Event(msg)
                 return r         
     def fetchByID(self,messageid:int,targetid:int):
-        url = self.api+"messageFromId?sessionKey="+self.session+"&messageId="+str(messageid)+"&target="+str(targetid)
+        url = self.__api+"messageFromId?sessionKey="+self.__session+"&messageId="+str(messageid)+"&target="+str(targetid)
         msg = {}
         try:
             i = json.loads(requests.get(url).text)
