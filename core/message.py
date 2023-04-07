@@ -1,5 +1,5 @@
 
-class Chain:
+class Chain:#重写
     chain = []
     sender = {
         "id":0,
@@ -42,8 +42,8 @@ class Chain:
 
 class Event:
     content = {}
-    def __init__(self,ipt):
-        self.content = ipt
+    def __init__(self,eventsIn):
+        self.content = eventsIn
     #Future:群/bot事件信息
 
 class Plain:
