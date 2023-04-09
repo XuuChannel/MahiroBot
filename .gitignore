@@ -132,5 +132,5 @@ dmypy.json
 sample.json
 config.toml
 t1.json
-banlist.json
+banned.json
 test.xml

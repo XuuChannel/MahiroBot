@@ -17,4 +17,23 @@ m = [
     "text":" \n-From the New MahiroBot(beta) at "+time.asctime()
     }
 ]
-b.groupSend(m)
+#b.groupSend(m)
+i = message.Chain()
+j = message.Chain()
+print(i.content)
+print(j.content)
+i.add(message.Plain("I am \"i\""))
+print(i.content)
+print(j.content)
+j.add(message.Plain("I am \"j\""))
+print(i.content)
+print(j.content)
+
+'''
+while(1):
+    time.sleep(0.5)
+    receive = b.fetchMessage()
+    if(receive!=None and type(receive).__name__=="Chain"):
+        print(receive.content)
+        
+'''

@@ -1,50 +1,67 @@
-
-class Chain:#重写
-    chain = []
-    sender = {
-        "id":0,
-        "group":0,
-        "perm":2,#0=t0,1=t1,2=none,3=banned
+#修改:把不应该是类共有变量的变量写在init内
+class Chain:
+    content = []
+    target = {
+        "id":None,
+        "group":None,
+        "groupPerm":None
     }
-    ReceiveFlag = False
-    MessageType = ""
-    def __init__(self,isReceived:bool = False,pid:int=0,group:int=0,perm:int=2):
-        if(isReceived == True):
-            self.sender["id"] = pid
-            self.sender["group"] = group
-            self.sender["perm"] = perm
-            self.ReceiveFlag = True
-    def senderinit(self,pid:int,group:int):
-        if(self.ReceiveFlag == True):
-            self.sender["id"] = pid
-            self.sender["group"] = group
-    def perminit(self,perm:int):
-        if(self.ReceiveFlag == True):
-            self.sender["perm"]=perm
-    def clear(self):
-        self.chain.clear()
+    typename = ""
+    def __del__(self):
+        self.allClear()
+    def __init__(self,Type:str="BotMessage",sender:dict=None,chain:list=None):
+        self.typename = Type
+        if(Type!="BotMessage"):
+            self.target["id"]=sender["id"]
+        if("Group" in Type or "Temp" in Type):
+            self.target["group"] = sender["group"]["id"]
+            self.target["groupPerm"] = sender["permission"]
+        if(chain!=None):self.__chainInit(chain)
+    def setTarget(self,ID:int=None,Group:int=None):
+        if(ID!=None):self.target["id"] = ID
+        if(Group!=None):self.target["group"] = Group
+    def __chainInit(self,chain):
+        for msg in chain:
+            if(msg["type"]=="Plain" or msg["type"]=="Quote" or msg["type"]=="At" or msg["type"]=="AtAll" or msg["type"]=="Image" or msg["type"]=="Voice"):
+                self.content.append(msg)
+        self.chainLocalize()
+    def chainLocalize(self):#UNFINISHED
+        if(self.typename=="BotMessage"):
+            return False
+        else:
+            #UNFINISHED
+            return True
+    def chainClear(self):
+        self.content.clear()
+    def allClear(self):
+        self.chainClear()
+        self.target = {
+        "id":None,
+        "group":None,
+        "groupPerm":None
+        }
+        self.typename = ""
     def add(self,contentClass):
-        self.chain.append(contentClass.content)
-    def send(self,botClass,target:int = 0,isGroup:bool = True):
-        if(target == 0):
-            botClass.GroupSend(self.chain)
-        elif(isGroup == False):
-            botClass.FriendSend(self.chain,target)
-        else:
-            botClass.GroupSend(self.chain,target)
-        self.clear()
-    def read(self):
-        if(len(self.chain)==0):
-            return None
-        else:
-            return self.chain.pop(0)
+        self.content.append(contentClass.content)
+    def send(self,botClass):
+        if(type(botClass).__name__ == "Bot"):
+            if(self.target["group"]!=None):
+                botClass.groupSend(self.content,self.target["group"])
+                self.allClear()
+                return True
+            if(self.target["id"]!=None):
+                botClass.friendSend(self.content,self.target["id"])
+                self.allClear()
+                return True
 #UNFINISHED:关键词检测 关键元素匹配
 
 class Event:
     content = {}
+    typename = ""
     def __init__(self,eventsIn):
         self.content = eventsIn
-    #Future:群/bot事件信息
+        self.typename = self.content["type"]
+#Future:群/bot事件信息分类解析
 
 class Plain:
     content = {"type": "Plain"}
