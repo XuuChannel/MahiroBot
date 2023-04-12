@@ -1,4 +1,3 @@
-#修改:把不应该是类共有变量的变量写在init内
 import toml
 import requests
 import json
@@ -12,18 +11,24 @@ class MiraiError(Exception):
         return f"CODE {str(self.code)} \"{self.msg}\""
 
 class Bot:
+    """
     __api = ""
     __session  = ""
     account = 0
     target = 0
     perm = None
     __botmsg = []
-
+    """
     class __Perm:
+        """
         t0 = []
         t1 = []
         banned = []
+        """
         def __init__(self,configs):
+            self.t0 = []
+            self.t1 = []
+            self.banned = []
             self.t0 = configs["t0_users"]
             try:
                 f = open("./data/perm/t1.json","r", encoding="utf-8")
@@ -83,6 +88,7 @@ class Bot:
             f.close()
     
     def __init__(self,configPath:str):
+        self.__botmsg = []
     #读取配置文件并尝试连接api
         configs = toml.load(configPath)
         self.__api = configs["api_url"]+":"+str(configs["api_port"])+"/"
@@ -139,7 +145,6 @@ class Bot:
 
 #Future:临时会话发送 获取bot,群,用户信息 撤回 戳一戳 账号管理 群管理
 
-#↓重写 删除/移动不必要的
     def __fetch(self):
         url = self.__api+"fetchMessage?sessionKey="+self.__session
         try:
@@ -149,7 +154,6 @@ class Bot:
             if(len(i["data"])!=0):self.__botmsg=self.__botmsg+i["data"]
         except Exception as e:
             print(e)
-        
     def fetchMessage(self):
         self.__fetch()
         msg = {}
@@ -163,51 +167,17 @@ class Bot:
             ret = message.Chain(msg["type"],msg["sender"],msg["messageChain"])
             return ret
         return None
-        
-        
-
-
-
-
-'''
-         
-    def fetchByID(self,messageid:int,targetid:int):
-        url = self.__api+"messageFromId?sessionKey="+self.__session+"&messageId="+str(messageid)+"&target="+str(targetid)
+    def fetchByID(self,messageID:int,targetID:int):
+        url = self.__api+"messageFromId?sessionKey="+self.__session+"&messageId="+str(messageID)+"&target="+str(targetID)
         msg = {}
         try:
             i = json.loads(requests.get(url).text)
             if(i["code"]!=0):
-                raise Exception({"code":i["code"],"msg":i["msg"]})
-            elif(i["code"]==5):
-                return None
-            msg = i["data"]
+                raise MiraiError(i)
+            if(len(i["data"])!=0):msg = i["data"]
         except Exception as e:
             print(e)
-        if(msg["type"]=="GroupMessage" or msg["type"] == "TempMessage"):
-            r = message.Chain(True,msg["sender"]["id"],msg["sender"]["group"]["id"])
-            r.MessageType = msg["type"]
-            for id in self.perm_banlist:
-                if(id==msg["sender"]["id"]):r.perminit(3)
-            chain = self._filter(msg["messageChain"])
-            if(len(chain)!=0):r.chain = chain
-            else:r.chain = [{"type":"Other","text":"不支持的消息"}]
-            if(r.sender["perm"]==3):r.chain = [{"type":"Other","text":"BANNED USER"}]
-            return r
-        elif(msg["type"]=="FriendMessage" or msg["type"] == "StrangerMessage" or msg["type"] == "OtherClientMessage"):
-            r = message.Chain(True,msg["sender"]["id"])
-            r.MessageType = msg["type"]
-            for id in self.perm_banlist:
-                if(id==msg["sender"]["id"]):r.perminit(3)
-            chain = self._filter(msg["messageChain"])
-            if(len(chain)!=0):r.chain = chain
-            else:r.chain = [{"type":"Other","text":"不支持的消息"}]
-            if(r.sender["perm"]==3):r.chain = [{"type":"Other","text":"BANNED USER"}]
-            return r
-        else:
-            #Future:补全Event类
-            r = message.Event(msg)
-            return r  
-    
-'''
-
-    
+            return None
+        if(self.perm.Check(msg["sender"]["id"])==3):return None
+        ret = message.Chain(msg["type"],msg["sender"],msg["messageChain"])
+        return ret
