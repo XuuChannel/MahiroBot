@@ -10,17 +10,8 @@ def fetchD():
     while(1):
         time.sleep(0.5)
         msg = b.fetchMessage()
-        if(msg!=None and msg.typename == "GroupMessage" and msg.target["group"] == b.target):
-            print(msg.content)
-            if(msg.commandCheck("test")==True):
-                msg.chainClear()
-                msg.add(message.Plain("Command detected."))
-                msg.send(b)
-            elif(msg.commandCheck("testnum",True)!=False):
-                num = str(msg.commandCheck("testnum",True))
-                msg.chainClear()
-                msg.add(message.Plain("Command detected. "+num))
-                msg.send(b)
+        if(msg!=None and msg.typename == "GroupMessage" and msg.target["group"] == b.target and "Plain" in msg.chainCheck()["containObjs"]):
+            print(str(msg.target["id"])+":"+msg.plainRead())
 
 _thread.start_new_thread(fetchD,())
 while(1):

@@ -83,8 +83,38 @@ class Chain:
         if(num<0 or num>=len(self.content)):return False
         return(self.content[num])
     def plainRead(self):
-        pass
-#UNFINISHED:关键词检测 关键元素匹配 链读取
+        ret = ""
+        for i in self.content:
+            if(i["type"]=="Plain"):
+                ret=ret+i["text"]+"\n"
+        if(ret == ""):return False
+        return ret
+    def imgUrlRead(self):
+        ret = []
+        for i in self.content:
+            if(i["type"]=="Image" and i["url"]!=None):
+                ret.append(i["url"])
+        if(len(ret)==0):return False
+        return ret
+    def voUrlRead(self):
+        ret = []
+        for i in self.content:
+            if(i["type"]=="Voice" and i["url"]!=None):
+                ret.append(i["url"])
+        if(len(ret)==0):return False
+        return ret
+    def quoteRead(self):
+        for i in self.content:
+            if(i["type"]=="Quote"):
+                return {"messageID":i["id"],"target":i["target"]}
+        return False
+    def atRead(self):
+        ret = []
+        for i in self.content:
+            if(i["type"]=="At"):
+                ret.append(i["target"])
+        if(len(ret)==0):return False
+        return ret
 
 class Event:
     '''
