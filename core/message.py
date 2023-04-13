@@ -71,7 +71,19 @@ class Chain:
                         elif(hasParam==False):
                             return True
         return False
-
+    def chainCheck(self):
+        ret = {
+            "length":len(self.content),
+            "containObjs":set()
+        }
+        for i in self.content:
+            ret["containObjs"].add(i["type"])
+        return ret
+    def chainRead(self,num:int):
+        if(num<0 or num>=len(self.content)):return False
+        return(self.content[num])
+    def plainRead(self):
+        pass
 #UNFINISHED:关键词检测 关键元素匹配 链读取
 
 class Event:
