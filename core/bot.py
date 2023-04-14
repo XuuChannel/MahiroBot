@@ -117,7 +117,8 @@ class Bot:
         if(post["code"]!=0):
             raise MiraiError(post)
         print("[INFO] SessionRelease Succeed.")
-        self.perm.Save()
+        #self.perm.Save()
+        #为什么open会报错 气人
         
     def groupSend(self,messageChain:list,target:int=None)->bool: #群号可选
         message = {"sessionKey":self.__session,"target":self.target,"messageChain":messageChain}

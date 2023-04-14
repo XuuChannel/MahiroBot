@@ -2,8 +2,10 @@ from core import bot
 from core import message
 import time
 import threading
-version = 3.0
-
+import toml
+import importlib
+import os
+verInfo = toml.load("./version.toml")
 logo = """
                    __                       ____            __      
  /'\_/`\          /\ \      __             /\  _`\         /\ \__   
@@ -13,9 +15,22 @@ logo = """
   \ \_\\\\ \_\ \__/.\_\\\\ \_\ \_\ \_\ \_\\\\ \____/\ \____/\ \____/\ \__\\
    \/_/ \/_/\/__/\/_/ \/_/\/_/\/_/\/_/ \/___/  \/___/  \/___/  \/__/
                                                                     
-MahiroBot v%s by Xuu [https://github.com/XuuChannel/MahiroBot]
-BOOTING..."""%(str(version))
-
+MahiroBot %s by Xuu [https://github.com/XuuChannel/MahiroBot]
+BOOTING..."""%(verInfo["version"])
 print(logo)
 
 b=bot.Bot("./config.toml")
+
+def moduleload()->list:
+    files = os.listdir("./module/")
+    d = []
+    for file in files:
+        if(".py" in file):
+            filename = file.strip(".py")
+            d.append(importlib.import_module("module."+filename))
+    return d
+modules = moduleload()
+print(type(modules[0]))
+m = message.Chain()
+m.setTarget(Group=b.target)
+modules[0].mahiroModule(m,b)

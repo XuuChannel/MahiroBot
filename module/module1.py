@@ -15,6 +15,6 @@ mahiroModuleInfo = {
 
 def mahiroModule(inbound:message.Chain,bot:bot.Bot)->None:
     rep = message.Chain()
-    rep.setTarget(Group = inbound.sender["group"])
+    rep.setTarget(Group = inbound.target["group"])
     rep.add(message.Plain("现在的时间是 "+time.asctime()+" 喵"))
     rep.send(bot)
