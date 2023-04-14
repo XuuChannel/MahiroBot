@@ -1,10 +1,12 @@
+#和message.py一样的问题 被强动态类型语言气晕.jpg 
+#不知道还要不要写功能实现的注释
 import toml
 import requests
 import json
 from core import message
 
-class MiraiError(Exception):
-    def __init__(self,errorMessage):
+class MiraiError(Exception):#懒得改类型指定了 感觉屁用没有
+    def __init__(self,errorMessage:dict):
         self.code = errorMessage["code"]
         self.msg = errorMessage["msg"]
     def __str__(self):
@@ -25,7 +27,7 @@ class Bot:
         t1 = []
         banned = []
         """
-        def __init__(self,configs):
+        def __init__(self,configs)->None:
             self.t0 = []
             self.t1 = []
             self.banned = []
@@ -48,7 +50,7 @@ class Bot:
                 s = {"list":[]}
                 json.dump(s, f, ensure_ascii=False)
                 f.close()
-        def Check(self,id:int):#0=t0,1=t1,2=none,3=banned
+        def Check(self,id:int)->int:#0=t0,1=t1,2=none,3=banned
             for i in self.t0:
                 if(i ==id):return 0
             for i in self.t1:
@@ -56,7 +58,7 @@ class Bot:
             for i in self.banned:
                 if(i ==id):return 3
             return 2
-        def Add(self,id:int,tier:int):
+        def Add(self,id:int,tier:int)->bool:
             idcheck = self.Check(id)
             if(tier!=1 or tier!=3 or idcheck!=2):
                 return False
@@ -67,7 +69,7 @@ class Bot:
                 self.banned.append(id)
                 return True
             return False
-        def Del(self,id:int):
+        def Del(self,id:int)->bool:
             idcheck = self.Check(id)
             match idcheck:
                 case 1:
@@ -77,7 +79,7 @@ class Bot:
                     self.banned.remove(id)
                     return True
             return False
-        def Save(self):
+        def Save(self)->None:
             f = open("./data/perm/t1.json","w", encoding="utf-8")
             s = {"list":self.t1}
             json.dump(s, f, ensure_ascii=False)
@@ -87,7 +89,7 @@ class Bot:
             json.dump(s, f, ensure_ascii=False)
             f.close()
     
-    def __init__(self,configPath:str):
+    def __init__(self,configPath:str)->None:
         self.__botmsg = []
     #读取配置文件并尝试连接api
         configs = toml.load(configPath)
@@ -109,7 +111,7 @@ class Bot:
     #读取权限文件
         self.perm = self.__Perm(configs)
 
-    def __del__(self):
+    def __del__(self)->None:
         message = {"sessionKey": self.__session,"qq": self.account}
         post = json.loads(requests.post(self.__api+"release",json.dumps(message,ensure_ascii=False)).text)
         if(post["code"]!=0):
@@ -117,7 +119,7 @@ class Bot:
         print("[INFO] SessionRelease Succeed.")
         self.perm.Save()
         
-    def groupSend(self,messageChain:list,target:int=None): #群号可选
+    def groupSend(self,messageChain:list,target:int=None)->bool: #群号可选
         message = {"sessionKey":self.__session,"target":self.target,"messageChain":messageChain}
         if(target!=None):
             message["target"]=target
@@ -130,7 +132,7 @@ class Bot:
             return False
         print("[INFO] SendAction Succeed.")
         return True
-    def friendSend(self,messageChain:list,target:int):
+    def friendSend(self,messageChain:list,target:int)->bool:
         message = {"sessionKey":self.__session,"target":target,"messageChain":[]}
         message["messageChain"]=messageChain
         try:
@@ -145,7 +147,7 @@ class Bot:
 
 #Future:临时会话发送 获取bot,群,用户信息 撤回 戳一戳 账号管理 群管理
 
-    def __fetch(self):
+    def __fetch(self)->None:
         url = self.__api+"fetchMessage?sessionKey="+self.__session
         try:
             i = json.loads(requests.get(url).text)
@@ -154,7 +156,7 @@ class Bot:
             if(len(i["data"])!=0):self.__botmsg=self.__botmsg+i["data"]
         except Exception as e:
             print(e)
-    def fetchMessage(self):
+    def fetchMessage(self):#笑死 输出有多种类型的该怎么指定
         self.__fetch()
         msg = {}
         try:msg = self.__botmsg.pop()
@@ -167,7 +169,7 @@ class Bot:
             ret = message.Chain(msg["type"],msg["sender"],msg["messageChain"])
             return ret
         return None
-    def fetchByID(self,messageID:int,targetID:int):
+    def fetchByID(self,messageID:int,targetID:int)->message.Chain:
         url = self.__api+"messageFromId?sessionKey="+self.__session+"&messageId="+str(messageID)+"&target="+str(targetID)
         msg = {}
         try:

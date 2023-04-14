@@ -1,6 +1,7 @@
-#插件示例 UNFINISHED
+#插件示例
 import time
 from core import message
+from core import bot
 
 mahiroModuleInfo = {
     "name":"MahiroTime",
@@ -12,9 +13,8 @@ mahiroModuleInfo = {
     "target":"group"#group/friend/target
 }
 
-def mahiroModule(inbound,bot):
+def mahiroModule(inbound:message.Chain,bot:bot.Bot)->None:
     rep = message.Chain()
     rep.setTarget(Group = inbound.sender["group"])
     rep.add(message.Plain("现在的时间是 "+time.asctime()+" 喵"))
     rep.send(bot)
-    return True

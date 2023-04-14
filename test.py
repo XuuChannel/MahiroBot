@@ -4,8 +4,9 @@ from core import bot
 from core import message
 
 b = bot.Bot("./config.toml")
-print(b.perm.t0)
 
+
+"""
 def fetchD():
     while(1):
         time.sleep(0.5)
@@ -21,3 +22,4 @@ while(1):
     j.add(message.Plain(i))
     j.add(message.Plain(" \n-From the New MahiroBot(beta) at "+time.asctime()))
     j.send(b)
+"""
