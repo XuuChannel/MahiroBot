@@ -119,6 +119,24 @@ class Chain:
                 ret.append(i["target"])
         if(len(ret)==0):return None
         return ret
+    def chainStrReturn(self)->str:
+        ret = ""
+        for i in self.content:
+            match i["type"]:
+                case "Plain":
+                    ret+=i["text"]
+                case "Image":
+                    ret+="[IMAGE]"
+                case "Voice":
+                    ret+="[VOICE]"
+                case "At":
+                    ret = ret+"@"+str(i["target"])
+                case "AtAll":
+                    ret+="@所有成员"
+                case "Quote":
+                    ret = ret+"[QUOTE "+str(i["id"])+"]"
+        return ret
+    
 
 class Event:
     '''

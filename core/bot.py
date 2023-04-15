@@ -1,9 +1,10 @@
 #和message.py一样的问题 被强动态类型语言气晕.jpg 
-#不知道还要不要写功能实现的注释
 import toml
 import requests
 import json
+import logging
 from core import message
+import time
 
 class MiraiError(Exception):#懒得改类型指定了 感觉屁用没有
     def __init__(self,errorMessage:dict):
@@ -50,6 +51,7 @@ class Bot:
                 s = {"list":[]}
                 json.dump(s, f, ensure_ascii=False)
                 f.close()
+            logging.info("Permission INIT succeed.")
         def Check(self,id:int)->int:#0=t0,1=t1,2=none,3=banned
             for i in self.t0:
                 if(i ==id):return 0
@@ -88,11 +90,14 @@ class Bot:
             s = {"list":self.banned}
             json.dump(s, f, ensure_ascii=False)
             f.close()
+            logging.info("Permission SAVE succeed.")
     
     def __init__(self,configPath:str)->None:
         self.__botmsg = []
     #读取配置文件并尝试连接api
         configs = toml.load(configPath)
+        if(configs["event_log"] == True):logging.basicConfig(filename="./data/logs/MahiroLog_"+str(int(time.time()))+".log",format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s',level=logging.INFO)
+        else:logging.basicConfig(format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s',level=logging.INFO)
         self.__api = configs["api_url"]+":"+str(configs["api_port"])+"/"
         self.account = configs["bot_account"]
         self.target = configs["target_group"]
@@ -107,7 +112,7 @@ class Bot:
         result = json.loads(post.text)
         if(result["code"]!=0):
             raise MiraiError(result)
-        print("[INFO] Verify&Bind Succeed.")
+        logging.info("Bot Verify&Bind succeed.")
     #读取权限文件
         self.perm = self.__Perm(configs)
 
@@ -116,7 +121,7 @@ class Bot:
         post = json.loads(requests.post(self.__api+"release",json.dumps(message,ensure_ascii=False)).text)
         if(post["code"]!=0):
             raise MiraiError(post)
-        print("[INFO] SessionRelease Succeed.")
+        logging.info("Bot SessionRelease succeed.")
         #self.perm.Save()
         #为什么open会报错 气人
         
@@ -129,9 +134,9 @@ class Bot:
             if(json.loads(post.text)["code"]!=0):
                 raise MiraiError(json.loads(post.text))
         except Exception as e:
-            print(e)
+            logging.error(e)
             return False
-        print("[INFO] SendAction Succeed.")
+        logging.info("Bot SendAction succeed.")
         return True
     def friendSend(self,messageChain:list,target:int)->bool:
         message = {"sessionKey":self.__session,"target":target,"messageChain":[]}
@@ -141,9 +146,9 @@ class Bot:
             if(json.loads(post.text)["code"]!=0):
                 raise MiraiError(json.loads(post.text))
         except Exception as e:
-            print(e)
+            logging.error(e)
             return False
-        print("[INFO] SendAction Succeed.")
+        logging.info("Bot SendAction succeed.")
         return True
 
 #Future:临时会话发送 获取bot,群,用户信息 撤回 戳一戳 账号管理 群管理
@@ -156,18 +161,20 @@ class Bot:
                 raise MiraiError(i)
             if(len(i["data"])!=0):self.__botmsg=self.__botmsg+i["data"]
         except Exception as e:
-            print(e)
-    def fetchMessage(self):#笑死 输出有多种类型的该怎么指定
+            logging.error(e)
+    def fetchMessage(self):#输出有多种类型的该怎么指定
         self.__fetch()
         msg = {}
         try:msg = self.__botmsg.pop()
         except IndexError:return None
         if("Event" in msg["type"]):
             ret = message.Event(msg)
+            logging.info("Bot FetchEvent succeed. "+ret.typename)
             return ret
         elif("Message" in msg["type"] and "Sync" not in msg["type"]):
             if(self.perm.Check(msg["sender"]["id"])==3):return None
             ret = message.Chain(msg["type"],msg["sender"],msg["messageChain"])
+            logging.info("Bot FetchMessage succeed. Type="+ret.typename+" Sender="+str(ret.target["id"])+" Group="+str(ret.target["group"])+"\nMessage="+ret.chainStrReturn())
             return ret
         return None
     def fetchByID(self,messageID:int,targetID:int)->message.Chain:
@@ -179,8 +186,9 @@ class Bot:
                 raise MiraiError(i)
             if(len(i["data"])!=0):msg = i["data"]
         except Exception as e:
-            print(e)
+            logging.error(e)
             return None
         if(self.perm.Check(msg["sender"]["id"])==3):return None
         ret = message.Chain(msg["type"],msg["sender"],msg["messageChain"])
+        logging.info("Bot FetchMessage succeed. Type="+ret.typename+" Sender="+str(ret.target["id"])+" Group="+str(ret.target["group"])+"\nMessage="+ret.chainStrReturn())
         return ret

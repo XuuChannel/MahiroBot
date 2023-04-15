@@ -7,8 +7,9 @@ mahiroModuleInfo = {
     "name":"MahiroTime",
     "version":1.0,
     "type":"trigger",#trigger/background
-    "condition":["Command"],#Command/Plain/At/Quote/etc.
+    "condition":["Command"],#Command/Event/Plain/At/Quote/etc.
     "command":["time"],
+    #"event":["NudgeEvent"],
     "permission":False,
     "target":"group"#group/friend/target
 }

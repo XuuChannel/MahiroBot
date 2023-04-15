@@ -5,6 +5,7 @@ import threading
 import toml
 import importlib
 import os
+import logging
 verInfo = toml.load("./version.toml")
 logo = """\033[0;33;40m
                    __                       ____            __      
@@ -17,21 +18,12 @@ logo = """\033[0;33;40m
                                                                     
 MahiroBot %s by Xuu [https://github.com/XuuChannel/MahiroBot]
 \033[0m
-BOOTING..."""%(verInfo["version"])
+Loading..."""%(verInfo["version"])
 print(logo)
 
 b=bot.Bot("./config.toml")
 
-def moduleload()->list:
-    files = os.listdir("./module/")
-    d = []
-    for file in files:
-        if(".py" in file):
-            filename = file.strip(".py")
-            d.append(importlib.import_module("module."+filename))
-    return d
-modules = moduleload()
-print(type(modules[0]))
-m = message.Chain()
-m.setTarget(Group=b.target)
-modules[0].mahiroModule(m,b)
+while(1):
+    time.sleep(1)
+    b.fetchMessage()
+
