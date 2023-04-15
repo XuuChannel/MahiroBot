@@ -6,7 +6,7 @@ import toml
 import importlib
 import os
 verInfo = toml.load("./version.toml")
-logo = """
+logo = """\033[0;33;40m
                    __                       ____            __      
  /'\_/`\          /\ \      __             /\  _`\         /\ \__   
 /\      \     __  \ \ \___ /\_\  _ __   ___\ \ \L\ \    ___\ \ ,_\  
@@ -16,6 +16,7 @@ logo = """
    \/_/ \/_/\/__/\/_/ \/_/\/_/\/_/\/_/ \/___/  \/___/  \/___/  \/__/
                                                                     
 MahiroBot %s by Xuu [https://github.com/XuuChannel/MahiroBot]
+\033[0m
 BOOTING..."""%(verInfo["version"])
 print(logo)
 
