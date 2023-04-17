@@ -1,1 +1,7 @@
-#UNFINISHED
+api_url = "http://sample.com"#MiraiAPI地址
+api_port = 8080              #MiraiAPI端口
+api_key = "114514"           #MiraiAPI密钥
+bot_account = 1919810        #机器人账号
+target_group = 0000000       #目标QQ群
+t0_users = [1,2]             #管理员账号
+event_log = false            #是否输出log文件

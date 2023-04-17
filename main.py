@@ -1,9 +1,8 @@
 from core import bot
 from core import message
+from core import module
 import time
-import threading
 import toml
-import importlib
 import os
 import logging
 
@@ -27,6 +26,7 @@ def barDisplay():
     print("\033[0;37;42m MahiroBot %s"%(verInfo["version"])+sp+time.asctime()+" \033[0m",end="\r",flush=True)
 
 b=bot.Bot("./config.toml")
+m=module.Module
 
 while(1):
     time.sleep(0.5)
