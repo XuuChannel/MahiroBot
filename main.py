@@ -26,10 +26,10 @@ def barDisplay():
     print("\033[0;37;42m MahiroBot %s"%(verInfo["version"])+sp+time.asctime()+" \033[0m",end="\r",flush=True)
 
 b=bot.Bot("./config.toml")
-m=module.Module
+mnum=module.Module()
 
 while(1):
     time.sleep(0.5)
-    b.fetchMessage()
+    mnum.moduleProcess(b)
     barDisplay()
 

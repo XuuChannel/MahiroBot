@@ -53,7 +53,7 @@ class Chain:
                 self.content.append(contents)
                 return True
             return False   
-    def send(self,botClass)->bool:#傻逼类型检查 传入类不知道咋写 摆了
+    def send(self,botClass)->bool:
         if(self.target["group"]!=None):
             botClass.groupSend(self.content,self.target["group"])
             return True
@@ -61,7 +61,7 @@ class Chain:
             botClass.friendSend(self.content,self.target["id"])
             return True
         return False
-    def commandCheck(self,comm:str,hasParam:bool=False)->bool:
+    def commandCheck(self,comm:str,hasParam:bool=False):#傻逼类型检查 传入类不知道咋写 摆了
         comm = "#"+comm
         for i in self.content:
             if(i["type"]=="Plain"):
@@ -136,7 +136,6 @@ class Chain:
                 case "Quote":
                     ret = ret+"[QUOTE "+str(i["id"])+"]"
         return ret
-    
 
 class Event:
     '''
