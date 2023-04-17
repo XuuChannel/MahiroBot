@@ -14,6 +14,7 @@ class MiraiError(Exception):#懒得改类型指定了 感觉屁用没有
         return f"CODE {str(self.code)} \"{self.msg}\""
 
 class Bot:
+    errorCount = 0
     """
     __api = ""
     __session  = ""
@@ -134,6 +135,9 @@ class Bot:
             if(json.loads(post.text)["code"]!=0):
                 raise MiraiError(json.loads(post.text))
         except Exception as e:
+            self.errorCount+=1
+            if(self.errorCount>10):
+                exit()
             logging.error(e)
             return False
         logging.info("Bot SendAction succeed.")
@@ -146,6 +150,9 @@ class Bot:
             if(json.loads(post.text)["code"]!=0):
                 raise MiraiError(json.loads(post.text))
         except Exception as e:
+            self.errorCount+=1
+            if(self.errorCount>10):
+                exit()
             logging.error(e)
             return False
         logging.info("Bot SendAction succeed.")
@@ -161,6 +168,9 @@ class Bot:
                 raise MiraiError(i)
             if(len(i["data"])!=0):self.__botmsg=self.__botmsg+i["data"]
         except Exception as e:
+            self.errorCount+=1
+            if(self.errorCount>10):
+                exit()
             logging.error(e)
     def fetchMessage(self):#输出有多种类型的该怎么指定
         self.__fetch()
@@ -186,6 +196,9 @@ class Bot:
                 raise MiraiError(i)
             if(len(i["data"])!=0):msg = i["data"]
         except Exception as e:
+            self.errorCount+=1
+            if(self.errorCount>10):
+                exit()
             logging.error(e)
             return None
         if(self.perm.Check(msg["sender"]["id"])==3):return None

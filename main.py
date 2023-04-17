@@ -17,8 +17,7 @@ logo = """\033[0;33;40m
    \/_/ \/_/\/__/\/_/ \/_/\/_/\/_/\/_/ \/___/  \/___/  \/___/  \/__/
                                                                     
 MahiroBot %s by Xuu [https://github.com/XuuChannel/MahiroBot]
-\033[0m
-Loading..."""%(verInfo["version"])
+\033[0m"""%(verInfo["version"])
 print(logo)
 
 b=bot.Bot("./config.toml")
