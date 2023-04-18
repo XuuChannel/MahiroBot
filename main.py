@@ -7,7 +7,7 @@ import os
 
 verInfo = toml.load("./version.toml")
 os.system(' ')
-logo = """\033c\033[0;33m
+logo = """\033[0;33m
                    __                       ____            __      
  /'\_/`\          /\ \      __             /\  _`\         /\ \__   
 /\      \     __  \ \ \___ /\_\  _ __   ___\ \ \L\ \    ___\ \ ,_\  
