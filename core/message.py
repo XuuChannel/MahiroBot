@@ -66,12 +66,11 @@ class Chain:
         for i in self.content:
             if(i["type"]=="Plain"):
                 string = i["text"].strip()
-                string = string.splitlines(False)
-                strings = string[0].split(" ")
-                if(len(strings)>=1):
-                    if(strings[0]==comm):
-                        if(len(strings)>=2 and hasParam == True and strings[1]!=""):
-                            return strings[1]
+                string = string.split(" ")
+                if(len(string)>=1):
+                    if(string[0]==comm):
+                        if(len(string)>=2 and hasParam == True and string[1]!=""):
+                            return string[1]
                         elif(hasParam==False):
                             return True
         return False
