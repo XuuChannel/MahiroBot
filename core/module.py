@@ -5,9 +5,8 @@ from core import bot
 import logging
 import os
 import importlib
-import sys
 import time
-import threading
+import _thread
 import toml
 
 class Module:
@@ -23,12 +22,16 @@ class Module:
             "target":"all"
         }
         versionMessage = None
+        bootTime = None
         def __init__(self) -> None:
             self.versionMessage = toml.load("./version.toml")
+            self.bootTime = time.time()
         def mahiroModule(self,bot:bot.Bot,inbound:message.Chain)->None:
             #Future:后台常驻类模块相关
             #UNFINISHED:权限管理 关于 帮助 模块管理
-            pass
+            if(inbound.commandCheck("about")==True):
+                pass
+
 
     def __init__(self) -> None:
         files = os.listdir("./module/")
@@ -69,22 +72,22 @@ class Module:
                 if(mnum not in self.disablelist and self.mlist[mnum].mahiroModuleInfo["type"]=="trigger" and self.mlist[mnum].mahiroModuleInfo["condition"]=="Event"):
                     if(msg.typename in self.mlist[mnum].mahiroModuleInfo["event"]):
                         logging.info("Module triggered. "+self.mlist[mnum].mahiroModuleInfo["name"])
-                        threading.Thread(self.mlist[mnum].mahiroModule(bot=b,evinbound=msg)).run()
+                        _thread.start_new_thread(self.mlist[mnum].mahiroModule,(b,None,msg,))
     def __subprocess(self,b:bot.Bot,msg:message.Chain,mnum:int)->None:
         match self.mlist[mnum].mahiroModuleInfo["condition"]:
             case "Command":
                 for w in self.mlist[mnum].mahiroModuleInfo["command"]:
                     if(msg.commandCheck(w)==True):
                         logging.info("Module triggered. "+self.mlist[mnum].mahiroModuleInfo["name"])
-                        if(mnum!=0):threading.Thread(self.mlist[mnum].mahiroModule(bot=b,inbound=msg)).run()
+                        if(mnum!=0):_thread.start_new_thread(self.mlist[mnum].mahiroModule,(b,msg,))
                         else:self.mlist[0].mahiroModule(b,msg)
             case "Plain":
                 if("Plain" in msg.chainRead()["containObjs"]):
                     logging.info("Module triggered. "+self.mlist[mnum].mahiroModuleInfo["name"])
-                    if(mnum!=0):threading.Thread(self.mlist[mnum].mahiroModule(bot=b,inbound=msg)).run()
+                    if(mnum!=0):_thread.start_new_thread(self.mlist[mnum].mahiroModule,(b,msg,))
                     else:self.mlist[0].mahiroModule(b,msg)
             case "At":
                 if(msg.atRead()!=None and b.account in msg.atRead()):
                     logging.info("Module triggered. "+self.mlist[mnum].mahiroModuleInfo["name"])
-                    if(mnum!=0):threading.Thread(self.mlist[mnum].mahiroModule(bot=b,inbound=msg)).run()
+                    if(mnum!=0):_thread.start_new_thread(self.mlist[mnum].mahiroModule,(b,msg,))
                     else:self.mlist[0].mahiroModule(b,msg)
