@@ -37,11 +37,12 @@ class Module:
                 inbound.add(message.Plain("本 MahiroBot 实例于 "+self.bootTime+" UTC 启动。"))
                 inbound.send(bot)
                 inbound.chainClear()
-            if(inbound.commandCheck("showTarget")==True):
-                inbound.chainClear()
-                inbound.add(message.Chain("机盖宁当前的目标群聊为 "+str(bot.target)+" 喵"))
-                inbound.send(bot)
-                inbound.chainClear()
+            #↓不知为何 会报错
+            #if(inbound.commandCheck("showTarget")==True):
+            #    inbound.chainClear()
+            #    inbound.add(message.Chain("机盖宁当前的目标群聊为 "+str(bot.target)+" 喵"))
+            #    inbound.send(bot)
+            #    inbound.chainClear()
             if(inbound.commandCheck("permcheck")==True):
                 if(inbound.atRead()==None):
                     checkResult=bot.perm.Check(inbound.target["id"])
