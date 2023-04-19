@@ -33,7 +33,6 @@ class Bot:
             self.t0 = []
             self.t1 = []
             self.banned = []
-            self.t0 = configs["t0_users"]
             try:
                 f = open("./data/perm/t1.json","r", encoding="utf-8")
                 self.t1 = json.load(f)["list"]
@@ -52,6 +51,9 @@ class Bot:
                 s = {"list":[]}
                 json.dump(s, f, ensure_ascii=False)
                 f.close()
+            for i in configs["t0_users"]:
+                self.Del(i)
+                self.t0.append(i)
             logging.info("Permission INIT succeed.")
         def Check(self,id:int)->int:#0=t0,1=t1,2=none,3=banned
             for i in self.t0:
@@ -63,7 +65,7 @@ class Bot:
             return 2
         def Add(self,id:int,tier:int)->bool:
             idcheck = self.Check(id)
-            if(tier!=1 or tier!=3 or idcheck!=2):
+            if(idcheck!=2):
                 return False
             elif(tier==1):
                 self.t1.append(id)
