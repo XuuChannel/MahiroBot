@@ -1,4 +1,5 @@
 <div align="center">
+<img src="https://i0.hdslb.com/bfs/article/90f468f90fd2715a42c0b017c53953c65fd4e8e4.png" width=200px>
 
 # MahiroBot
 
@@ -87,3 +88,5 @@ python3 main.py
 本项目依据 `Do What The F*ck You Want To Public License` 开源。
 
 _~~拿去用的话 被人骂依托够使时不要说是我写的捏~~_
+
+项目图片来源:《别当欧尼酱了》官方表情包  侵删
