@@ -27,7 +27,7 @@ class Module:
             version = toml.load("./version.toml")
             self.bootTime = str(datetime.datetime.utcnow())
             #启动信息还是得改改 美观一点
-            self.versionMessage = "关于MahiroBot\n\nGitHub:\n https://github.com/XuuChannel/MahiroBot\n版本:\n %s\n版本说明:\n"%(version["version"])+version["info"]
+            self.versionMessage = "MahiroBot %s \nhttps://github.com/XuuChannel/MahiroBot\n版本说明:\n"%(version["version"])+version["info"]
         def mahiroModule(self,bot:bot.Bot,inbound:message.Chain)->None:
             if(inbound.commandCheck("about")==True):
                 inbound.chainClear()
