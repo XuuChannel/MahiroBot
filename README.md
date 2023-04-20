@@ -45,7 +45,7 @@
 >
 >##### `MahiroBot` 不是(也不会是)完整的QQ机器人框架。_~~其实是因为作者太菜了 只管自己写的爽~~_
 >
->##### 如果您想为 `MahiroBot` 编写第三方模块 可以参考  [`MahiroBot`内部函数用法与插件规范](about:blank) (施工中) 。
+>##### 如果您想为 `MahiroBot` 编写第三方模块 可以参考  [`MahiroBot`内部函数用法与插件规范](https://github.com/XuuChannel/MahiroBot) (施工中) 。
 
 ## Requirement
 
