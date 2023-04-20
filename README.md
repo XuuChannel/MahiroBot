@@ -22,30 +22,30 @@
 
 以下为项目默认模块目前可提供的功能，命令详情请参考bot内的帮助信息。
 
-1. MahiroBot管理模块（内置）:
+1. `MahiroBotManage`（内置）:
     - 其他模块的启用 禁用 管理 模块信息读取
     - 权限与黑名单系统
     - 关于与帮助信息
-2. MahiroTime:
+2. `MahiroTime`:
     - 报时
-3. MahiroNudge:
+3. `MahiroNudge`:
     - 对戳一戳事件做出反应
-4. MahiroSetu:
-    - 基于[LoliconAPI](https://api.lolicon.app/#/setu)的随机涩图发送
-5. [开发中]MahiroClassic:
+4. `MahiroSetu`:
+    - 基于 [`LoliconAPI`](https://api.lolicon.app/#/setu) 的随机涩图发送
+5. [开发中]`MahiroClassic`:
     - 记录群友逆天言论与弔图并随机/定向爆典
-6. [开发中]MahiroResponse:
+6. [开发中]`MahiroResponse`:
     - 读取消息链内容并触发特定回复
-7. [计划中]MahiroSocialCredit:
+7. [计划中]`MahiroSocialCredit`:
     - 记录公民社会信用值。做的好！SC+10
-8. [计划中]MahiroMeme:
+8. [计划中]`MahiroMeme`:
     - 随机梗图
 
 >### **ここに注意！**
 >
 >##### `MahiroBot` 不是(也不会是)完整的QQ机器人框架。_~~其实是因为作者太菜了 只管自己写的爽~~_
 >
->##### 如果您想为 `MahiroBot` 编写第三方模块 可以参考[MahiroBot内部函数用法与插件规范](about:blank) (施工中) 。
+>##### 如果您想为 `MahiroBot` 编写第三方模块 可以参考  [`MahiroBot`内部函数用法与插件规范](about:blank) (施工中) 。
 
 ## Requirement
 
