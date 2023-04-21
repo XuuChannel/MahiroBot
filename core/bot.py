@@ -207,3 +207,13 @@ class Bot:
         ret = message.Chain(msg["type"],msg["sender"],msg["messageChain"])
         logging.info("Bot FetchMessage succeed. Type="+ret.typename+" Sender="+str(ret.target["id"])+" Group="+str(ret.target["group"])+"\nMessage="+ret.chainStrReturn())
         return ret
+    def fetchMemberInfo(self,group:int,id:int)->dict:
+        url = self.__api+"/memberProfile?sessionKey="+self.__session+"&target="+str(group)+"&memberId="+str(id)
+        try:
+            i = json.loads(requests.get(url).text)
+            if("code" in i.keys()):
+                raise MiraiError(i)
+            return i
+        except Exception as e:
+            logging.error(e)
+            return None

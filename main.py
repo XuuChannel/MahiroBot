@@ -4,7 +4,6 @@ from core import module
 import time
 import toml
 import os
-from datetime import datetime
 
 verInfo = toml.load("./version.toml")
 os.system(' ')
@@ -21,11 +20,9 @@ MahiroBot %s by Xuu [https://github.com/XuuChannel/MahiroBot]
 \033[0m"""%(verInfo["version"])
 print(logo)
 
-
 b=bot.Bot("./config.toml")
 m=module.Module()
 
 while(1):
     time.sleep(0.5)
     m.moduleProcess(b)
-

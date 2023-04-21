@@ -109,7 +109,7 @@ class Chain:
     def quoteRead(self)->dict:
         for i in self.content:
             if(i["type"]=="Quote"):
-                return {"messageID":i["id"],"target":i["target"]}
+                return {"messageID":i["id"],"target":i["targetId"]}
         return None
     def quoteDel(self)->None:
         for i in self.content:
