@@ -111,6 +111,11 @@ class Chain:
             if(i["type"]=="Quote"):
                 return {"messageID":i["id"],"target":i["target"]}
         return None
+    def quoteDel(self)->None:
+        for i in self.content:
+            if(i["type"]=="Quote"):
+                self.content.remove(i)
+        return None
     def atRead(self)->list:
         ret = []
         for i in self.content:

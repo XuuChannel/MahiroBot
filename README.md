@@ -48,7 +48,7 @@
 >
 >如果您想为 `MahiroBot` 编写第三方模块 可以参考  [`MahiroBot`内部函数用法与插件规范](https://github.com/XuuChannel/MahiroBot) (施工中) 。
 
-## Requirement
+## Requirements
 
 - Python 3.10+
 - Mirai 2.14.0+
