@@ -134,3 +134,4 @@ config.toml
 t1.json
 banned.json
 test.xml
+data/classic/
