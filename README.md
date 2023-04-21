@@ -33,7 +33,7 @@
     - 对戳一戳事件做出反应
 4. `MahiroSetu`:
     - 基于 [`LoliconAPI`](https://api.lolicon.app/#/setu) 的随机涩图发送
-5. [开发中] `MahiroClassic`:
+5. `MahiroClassic`:
     - 记录群友逆天言论与弔图并随机/定向爆典
 6. [开发中] `MahiroResponse`:
     - 读取消息链内容并触发特定回复
