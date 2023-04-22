@@ -1,7 +1,5 @@
-version = "v3.0β"
+version = "v3.0 Public Beta"
 info = '''
--代码第二次重构
--全新的插件系统
--全新的权限管理系统
--全新的消息链和bot类
--支持更多的消息和事件类型'''
+-入典模块更新
+-新增quoteDel()和fetchMemberInfo()方法
+-修复了一些bug'''
