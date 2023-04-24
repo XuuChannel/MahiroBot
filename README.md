@@ -41,6 +41,8 @@
     - 记录公民社会信用值。做的好！SC+10
 8. [计划中] `MahiroMeme`:
     - 随机梗图
+9. `MahiroGPT`:
+    - 基于[`revChatGPT`](https://github.com/acheong08/ChatGPT)V1 的ai聊天模块（需要境外网络环境|模块安装说明详见代码文件注释）
 
 >### **ここに注意！**
 >
