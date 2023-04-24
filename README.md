@@ -83,6 +83,8 @@ python3 main.py
 >
 >`Mirai-API-HTTP` 必须配置为 `http adapter` 开启 , `singleMode` 关闭。[详见此处](https://github.com/project-mirai/mirai-api-http#settingyml%E6%A8%A1%E6%9D%BF)
 >
+>部分模块会导入新的依赖库，建议检查模块文件的注释并提前安装新的依赖。
+>
 >`MahiroBot` 命令皆为#号开头。
 
 ## 开源许可
