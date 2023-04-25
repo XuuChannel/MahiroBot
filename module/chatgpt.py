@@ -47,7 +47,7 @@ def mahiroModule(bot:bot.Bot,inbound:message.Chain=None,evinbound:message.Event=
         response = None
         for data in chatbot.ask(prompt):response = data
         if(len(response["message"])>=650):raise Exception()
-        inbound.add(message.Plain("[请谨慎使用 请求过多会被ban]Reply to "+bot.fetchMemberInfo(bot.target,inbound.target["id"])["nickname"]+" :\n"))
+        inbound.add(message.Plain("[请谨慎使用 请求过多会被ban] Reply to "+bot.fetchMemberInfo(bot.target,inbound.target["id"])["nickname"]+" :\n"))
         inbound.add(message.Plain(response["message"]))
         inbound.send(bot)
     except Exception as e:
