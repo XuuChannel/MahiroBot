@@ -11,7 +11,7 @@ import _thread,time
 
 mahiroModuleInfo = {
     "name":"MahiroGPT",
-    "version":0.2,
+    "version":0.3,
     "type":"trigger",
     "condition":"Command",
     "command":["chat"],
@@ -47,9 +47,11 @@ def mahiroModule(bot:bot.Bot,inbound:message.Chain=None,evinbound:message.Event=
         response = None
         for data in chatbot.ask(prompt):response = data
         if(len(response["message"])>=650):raise Exception()
+        inbound.add(message.Plain("[请谨慎使用 请求过多会被ban]Reply to "+bot.fetchMemberInfo(bot.target,inbound.target["id"])["nickname"]+" :\n"))
         inbound.add(message.Plain(response["message"]))
         inbound.send(bot)
-    except Exception:
+    except Exception as e:
+        logging.error(e)
         inbound.chainClear()
         inbound.add(message.Plain("""机盖宁温馨提示: OpenAI API 返回错误喵
 这可能是由于以下原因造成的喵：
