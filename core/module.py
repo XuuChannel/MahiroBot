@@ -230,12 +230,15 @@ class Module:
                         if(msgtype == self.mlist[mnum].mahiroModuleInfo["target"]):
                             if(msgperm == self.mlist[mnum].mahiroModuleInfo["permission"]):self.__subprocess(b,msg,mnum)
                             elif(self.mlist[mnum].mahiroModuleInfo["permission"] == False):self.__subprocess(b,msg,mnum)
+                            else:self.__trashCommandProcess(b,msg,mnum)
                         elif("all" == self.mlist[mnum].mahiroModuleInfo["target"]):
                             if(msgperm == self.mlist[mnum].mahiroModuleInfo["permission"]):self.__subprocess(b,msg,mnum)
                             elif(self.mlist[mnum].mahiroModuleInfo["permission"] == False):self.__subprocess(b,msg,mnum)
+                            else:self.__trashCommandProcess(b,msg,mnum)
                         elif(msgtype == "target" and self.mlist[mnum].mahiroModuleInfo["target"] == "group"):
                             if(msgperm == self.mlist[mnum].mahiroModuleInfo["permission"]):self.__subprocess(b,msg,mnum)
                             elif(self.mlist[mnum].mahiroModuleInfo["permission"] == False):self.__subprocess(b,msg,mnum)
+                            else:self.__trashCommandProcess(b,msg,mnum)
             self.moduleManage(msg,b)
         elif(msg!=None and type(msg) is message.Event):
             for mnum in range(len(self.mlist)):
@@ -243,6 +246,13 @@ class Module:
                     if(msg.typename in self.mlist[mnum].mahiroModuleInfo["event"]):
                         logging.info("Module triggered. "+self.mlist[mnum].mahiroModuleInfo["name"])
                         _thread.start_new_thread(self.mlist[mnum].mahiroModule,(b,None,msg,))
+    def __trashCommandProcess(self,b:bot.Bot,msg:message.Chain,mnum:int):
+        if(self.mlist[mnum].mahiroModuleInfo["condition"]=="Command"):
+            for w in self.mlist[mnum].mahiroModuleInfo["command"]:
+                if(msg.commandCheck(w)==True):
+                    msg.chainClear()
+                    msg.add(message.Plain("机盖宁温馨提示:您配吗"))
+                    msg.send(b)
     def __subprocess(self,b:bot.Bot,msg:message.Chain,mnum:int)->None:
         match self.mlist[mnum].mahiroModuleInfo["condition"]:
             case "Command":
