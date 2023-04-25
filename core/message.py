@@ -155,10 +155,6 @@ class Plain:
     def __init__(self,text:str)->None:
         self.content = {"type": "Plain"}
         self.content["text"] = text
-class Quote:
-    def __init__(self,id:int)->None:
-        self.content = {"type": "Quote"}
-        self.content["id"] = id
 class At:
     def __init__(self,target:int)->None:
         self.content = {"type": "At"}
@@ -180,3 +176,13 @@ class Voice:
         if(base64!=None):
             self.content["base64"]=base64  
 #Future:把消息链的类型补全
+#↓作废 不要用
+class Quote:
+    def __init__(self,id:int,target:int,sender:int,group:int)->None:
+        self.content = {"type": "Quote"}
+        self.content["id"] = id
+        self.content["targetId"] = target
+        self.content["senderId"] = sender
+        self.content["groupId"] = group
+        self.content["origin"] = [{"type":"Plain","text":""}]
+        print(self.content["origin"])
