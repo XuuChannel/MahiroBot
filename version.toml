@@ -1,5 +1,3 @@
 version = "v3.0 Public Beta"
 info = '''
--入典模块更新
--新增quoteDel()和fetchMemberInfo()方法
 -修复了一些bug'''
