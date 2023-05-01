@@ -22,7 +22,7 @@ def cpuInfo():
     # 获取CPU信息中的内存信息
     def memoryInfo(memory):
         return '\n    总内存(total): '+ str(round((float(memory.total) / 1024 / 1024 / 1024), 2)) + "G"+'\n    已使用(used): '+ str(round((float(memory.used) / 1024 / 1024 / 1024), 2)) + "G"+'\n    空闲(free): '+ str(round((float(memory.free) / 1024 / 1024 / 1024), 2)) + "G"+'\n    使用率(percent): '+ str(memory.percent) + '%'
-    return '物理CPU(core): '+str(psutil.cpu_count(logical=False))+'\n逻辑CPU个数(thread): '+str(psutil.cpu_count())+'\n虚拟内存(virtual_memory)'+memoryInfo(psutil.virtual_memory())+'\n交换内存(swap_memory)'+memoryInfo(psutil.swap_memory())
+    return '物理CPU(core): '+str(psutil.cpu_count(logical=False))+'\n逻辑CPU(thread): '+str(psutil.cpu_count())+'\n虚拟内存(virtual_memory)'+memoryInfo(psutil.virtual_memory())+'\n交换内存(swap_memory)'+memoryInfo(psutil.swap_memory())
 
 def mahiroModule(bot:bot.Bot,inbound:message.Chain=None,evinbound:message.Event=None)->None:
     global cLock
