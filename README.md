@@ -13,14 +13,12 @@
 
 >### **ここに注意！**
 >
->本项目可能与某些大佬的同类项目撞名 这绝对不是故意的喵
->
+>本项目可能与某些大佬的同类项目撞名 这绝对不是故意的喵  
 >投降喵！投降喵！
 
 ## 功能
 
-`MahiroBot` 内置功能采用模块加载的形式，也可以接受第三方编写的模块以实现更多功能。
-
+`MahiroBot` 内置功能采用模块加载的形式，也可以接受第三方编写的模块以实现更多功能。  
 以下为项目默认模块目前可提供的功能，命令详情请参考bot内的帮助信息。
 
 1. `MahiroBotManage`（内置）:
@@ -35,21 +33,17 @@
     - 基于 [`LoliconAPI`](https://api.lolicon.app/#/setu) 的随机涩图发送
 5. `MahiroClassic`:
     - 记录群友逆天言论与弔图并随机/定向爆典
-6. [开发中] `MahiroResponse`:
-    - 读取消息链内容并触发特定回复
-7. [计划中] `MahiroSocialCredit`:
+6. [计划中] `MahiroSocialCredit`:
     - 记录公民社会信用值。做的好！SC+10
-8. [计划中] `MahiroMeme`:
+7. [计划中] `MahiroMeme`:
     - 随机梗图
-9. `MahiroGPT`:
+8. `MahiroGPT`:
     - 基于[`revChatGPT`](https://github.com/acheong08/ChatGPT)V1 的ai聊天模块（需要境外网络环境|模块安装说明详见代码文件注释）
-10. `Performance`:
+9. `Performance`:
     - 输出性能信息
 
 >### **ここに注意！**
->
->`MahiroBot` 不是(也不会是)完整的QQ机器人框架。_~~其实是因为作者太菜了 只管自己写的爽~~_
->
+>`MahiroBot` 不是(也不会是)完整的QQ机器人框架。_~~其实是因为作者太菜了 只管自己写的爽~~_  
 >如果您想为 `MahiroBot` 编写第三方模块 可以参考  [`MahiroBot` 模块构建指南](https://github.com/XuuChannel/MahiroBot/blob/master/docs/ModuleInstruction.md) 。
 
 ## Requirements
@@ -91,8 +85,7 @@ python3 main.py
 
 ## 开源许可
 
-本项目依据 `Do What The F*ck You Want To Public License` 开源。
-
+本项目依据 `Do What The F*ck You Want To Public License` 开源。  
 _~~拿去用的话 被人骂依托够使时不要说是我写的捏~~_
 
 项目图片来源:《别当欧尼酱了》官方表情包  侵删
