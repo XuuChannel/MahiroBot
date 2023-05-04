@@ -1,6 +1,6 @@
 #模块使用方法：
 #   安装依赖库:python -m pip install --upgrade revChatGPT
-#   浏览器登陆openai网站后 访问https://chat.openai.com/api/auth/session 将内容复制下来保存为openai_token.json 存放到module文件夹中
+#   浏览器登陆openai网站后 访问https://chat.openai.com/api/auth/session 将内容复制下来保存为openai_token.json 存放到data文件夹中
 #   注意 保存下来的token具有使用期限
 from revChatGPT.V1 import Chatbot
 from core import message
@@ -20,7 +20,7 @@ mahiroModuleInfo = {
 }
 
 try:
-    f = open("./module/openai_token.json","r",encoding="utf-8")
+    f = open("./data/openai_token.json","r",encoding="utf-8")
     tokeninfo = json.loads(f.read())
     f.close()
 except:
