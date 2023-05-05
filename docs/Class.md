@@ -3,7 +3,7 @@
 
 [`core/bot.py`](https://github.com/XuuChannel/MahiroBot/blob/master/docs/bot.md)  
 MahiroBot机器人对象。  
-#本文档内提供的类与用法仅供内部使用，不应该被用户模块手动调用。
+#本文档内提供的部分类与用法仅供内部使用，不应该被用户模块手动调用。
 
 [`core/message.py`](https://github.com/XuuChannel/MahiroBot/blob/master/docs/message.md)  
 MahiroBot消息链与事件对象。
