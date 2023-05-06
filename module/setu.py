@@ -20,14 +20,14 @@ def mahiroModule(bot:bot.Bot,inbound:message.Chain=None,evinbound:message.Event=
     prompt = inbound.chainStrReturn()
     prompt=prompt.replace("#涩图","")
     prompt=prompt.lstrip()
+    prompt = prompt.replace("\n","")
     try:
-        pd = prompt.replace("\n","")
         picinfo = None
-        if(pd.isspace()==True or pd==""):
+        if(prompt.isspace()==True or prompt==""):
             picinfo = json.loads(requests.get("https://api.lolicon.app/setu/v2?size=regular").text)
         else:
-            pd=pd.rstrip()
-            picinfo = json.loads(requests.get("https://api.lolicon.app/setu/v2?size=regular&tag="+pd).text)
+            prompt=prompt.rstrip()
+            picinfo = json.loads(requests.get("https://api.lolicon.app/setu/v2?size=regular&tag="+prompt).text)
         picinfo = picinfo["data"][0]
         msg.add(message.Plain(picinfo["title"]+" by "+picinfo["author"]+" (pid"+str(picinfo["pid"])+")\n"+picinfo["urls"]["regular"]))
         msg.send(bot)
