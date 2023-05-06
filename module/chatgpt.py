@@ -11,7 +11,7 @@ import _thread,time
 
 mahiroModuleInfo = {
     "name":"MahiroGPT",
-    "version":0.3,
+    "version":0.4,
     "type":"trigger",
     "condition":"Command",
     "command":["chat"],
@@ -58,6 +58,7 @@ def mahiroModule(bot:bot.Bot,inbound:message.Chain=None,evinbound:message.Event=
 -账号配置的token错误或有效期到期
 -短时间请求次数过多
 -ChatGPT返回的消息过长
--网络错误"""))
+-网络错误
+-输入的消息为空"""))
         inbound.send(bot)
     cLock.release()
