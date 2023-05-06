@@ -6,7 +6,7 @@ import json
 
 mahiroModuleInfo = {
     "name":"MahiroSetu",
-    "version":1.0,
+    "version":1.5,
     "type":"trigger",
     "condition":"Command",
     "command":["涩图"],
@@ -17,8 +17,17 @@ mahiroModuleInfo = {
 def mahiroModule(bot:bot.Bot,inbound:message.Chain=None,evinbound:message.Event=None)->None:
     msg = message.Chain()
     msg.setTarget(Group=inbound.target["group"])
+    prompt = inbound.chainStrReturn()
+    prompt=prompt.replace("#涩图","")
+    prompt=prompt.lstrip()
     try:
-        picinfo = json.loads(requests.get("https://api.lolicon.app/setu/v2?size=regular").text)
+        pd = prompt.replace("\n","")
+        picinfo = None
+        if(pd.isspace()==True or pd==""):
+            picinfo = json.loads(requests.get("https://api.lolicon.app/setu/v2?size=regular").text)
+        else:
+            pd=pd.rstrip()
+            picinfo = json.loads(requests.get("https://api.lolicon.app/setu/v2?size=regular&tag="+pd).text)
         picinfo = picinfo["data"][0]
         msg.add(message.Plain(picinfo["title"]+" by "+picinfo["author"]+" (pid"+str(picinfo["pid"])+")\n"+picinfo["urls"]["regular"]))
         msg.send(bot)
