@@ -40,9 +40,9 @@ def mahiroModule(bot:bot.Bot,inbound:message.Chain=None,evinbound:message.Event=
 ```
 >### **ここに注意！**
 >主函数会传入三个参数:  
->+ `bot` (bot.Bot类 机器人对象)  
->+ `inbound` (message.Chain类 触发模块的消息对象 仅在触发条件为 Command/Plain/At 时传入)
->+ `evinbound` (message.Event类 触发模块的事件对象 仅在触发条件为 Event 时传入）
+>+ `bot` ([bot.Bot](https://github.com/XuuChannel/MahiroBot/blob/main/docs/bot.md#class-botconfigpathstr)类 机器人对象)  
+>+ `inbound` ([message.Chain]()类 触发模块的消息对象 仅在触发条件为 Command/Plain/At 时传入)
+>+ `evinbound` ([message.Event]()类 触发模块的事件对象 仅在触发条件为 Event 时传入）
 >
 >关于以上类的用法 以及 如何在主函数内调用bot内置功能和构建/发送消息链 请查阅 [MahiroBot类 与 内置函数](https://github.com/XuuChannel/MahiroBot/blob/master/docs/Class.md) (施工中) 。
 >
