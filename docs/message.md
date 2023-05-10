@@ -6,7 +6,7 @@ MahiroBot的消息链类。
 - `Type` (可选)：消息链的类型 详情请参考[这里](https://github.com/project-mirai/mirai-api-http/blob/master/docs/api/MessageType.md#%E6%B6%88%E6%81%AF%E9%93%BE%E7%B1%BB%E5%9E%8B)(type值)  
 由用户模块生成的消息链为默认值 (BotMessage) ，留空即可。
 - `sender` (可选)：消息链的发送者信息/回信目标。  
-用户模块请使用 [`Chain.setTarget`]() 。
+用户模块请使用 [`Chain.setTarget`](https://github.com/XuuChannel/MahiroBot/blob/main/docs/message.md#chainsettargetidintgroupint-none) 。
 - `chain` (可选)：bot接收到的消息链。  
 用户模块请留空。
 ### 方法
@@ -22,7 +22,7 @@ MahiroBot的消息链类。
 #### `Chain.add(content)->bool`  
 往消息链列表内添加消息。  
 参数：
-- `content` ：类型为 [MahiroBot消息类]() 或 标准`dict`格式消息 (格式请参考[这里](https://github.com/project-mirai/mirai-api-http/blob/master/docs/api/MessageType.md#%E6%B6%88%E6%81%AF%E7%B1%BB%E5%9E%8B))
+- `content` ：类型为 [MahiroBot消息类](https://github.com/XuuChannel/MahiroBot/blob/main/docs/message.md#%E4%BB%A5%E4%B8%8B%E4%B8%BAmahirobot%E6%B6%88%E6%81%AF%E7%B1%BB) 或 标准`dict`格式消息 (格式请参考[这里](https://github.com/project-mirai/mirai-api-http/blob/master/docs/api/MessageType.md#%E6%B6%88%E6%81%AF%E7%B1%BB%E5%9E%8B))
 
 返回值：
 - `True`(成功)/`False`(失败)
@@ -134,17 +134,17 @@ MahiroBot @全体成员消息类。无参数。
 MahiroBot图片消息类。
 参数：
 - `url` ：图片的链接
-- `bace64` ：图片的base64数据
+- `base64` ：图片的base64数据
 ### 数据
 #### `Image.content:dict`
 请参考[这里](https://github.com/project-mirai/mirai-api-http/blob/master/docs/api/MessageType.md#image)
 
-## `class Image(url:str,base64:str)`
+## `class Voice(url:str,base64:str)`
 MahiroBot语音消息类。  
 请注意 一个消息链列表中只能存在一条语音消息 同时该消息链中必须只有此条消息。  
 参数：
 - `url` ：语音的链接
-- `bace64` ：语音的base64数据
+- `base64` ：语音的base64数据
 ### 数据
-#### `Image.content:dict`
+#### `Voice.content:dict`
 请参考[这里](https://github.com/project-mirai/mirai-api-http/blob/master/docs/api/MessageType.md#voice)
