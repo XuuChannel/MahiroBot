@@ -1,8 +1,10 @@
+#已作废
+
 #模块使用方法：
 #   安装依赖库:python -m pip install --upgrade revChatGPT
 #   浏览器登陆openai网站后 访问https://chat.openai.com/api/auth/session 将内容复制下来保存为openai_token.json 存放到data文件夹中
 #   注意 保存下来的token具有使用期限
-from revChatGPT.V1 import Chatbot
+#from revChatGPT.V1 import Chatbot
 from core import message
 from core import bot
 import json
@@ -18,7 +20,7 @@ mahiroModuleInfo = {
     "permission":True,
     "target":"target"
 }
-
+'''
 try:
     f = open("./data/openai_token.json","r",encoding="utf-8")
     tokeninfo = json.loads(f.read())
@@ -30,8 +32,9 @@ chatbot = Chatbot(config={
 })
 cLock = _thread.allocate_lock()
 logging.info("Module MahiroGPT INIT completed.")
-
+'''
 def mahiroModule(bot:bot.Bot,inbound:message.Chain=None,evinbound:message.Event=None)->None:
+    '''
     global chatbot
     global cLock
     while(cLock.locked()):
@@ -62,3 +65,4 @@ def mahiroModule(bot:bot.Bot,inbound:message.Chain=None,evinbound:message.Event=
 -输入的消息为空"""))
         inbound.send(bot)
     cLock.release()
+    '''
