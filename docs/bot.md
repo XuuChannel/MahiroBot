@@ -15,7 +15,7 @@ MahiroBot机器人对象。
 返回值：
 - `True`(成功)/`False`:(失败) 
 
-用户模块请使用 message.Chain 的 [Chain.send(bot)](https://github.com/XuuChannel/MahiroBot/blob/main/docs/message.md#%E6%96%B9%E6%B3%95) 方法
+用户模块请使用 `message.Chain` 的 [`Chain.send(bot)`](https://github.com/XuuChannel/MahiroBot/blob/main/docs/message.md#%E6%96%B9%E6%B3%95) 方法
 
 #### *`Bot.friendSend(messageChain:list,target:int)->bool`
 将消息链列表发送至指定好友。  
@@ -26,13 +26,13 @@ MahiroBot机器人对象。
 返回值：
 - `True`(成功)/`False`:(失败) 
  
-用户模块请使用 message.Chain 的 [Chain.send(bot)](https://github.com/XuuChannel/MahiroBot/blob/main/docs/message.md#%E6%96%B9%E6%B3%95) 方法
+用户模块请使用 `message.Chain` 的 [`Chain.send(bot)`](https://github.com/XuuChannel/MahiroBot/blob/main/docs/message.md#%E6%96%B9%E6%B3%95) 方法
 
 #### *`Bot.fetchMessage()->message.Chain/message.Event`  
-从api获取最新消息列表 并返回一条包装成 [message.Chain](https://github.com/XuuChannel/MahiroBot/blob/main/docs/message.md#class-chaintypestrsenderdictchainlist)/[message.Event](https://github.com/XuuChannel/MahiroBot/blob/main/docs/message.md#class-eventeventsindict) 的最新消息链/事件。
+从api获取最新消息列表 并返回一条包装成 [`message.Chain`](https://github.com/XuuChannel/MahiroBot/blob/main/docs/message.md#class-chaintypestrsenderdictchainlist)/[`message.Event`](https://github.com/XuuChannel/MahiroBot/blob/main/docs/message.md#class-eventeventsindict) 的最新消息链/事件。
 
 #### `Bot.fetchByID(messageID:int,targetID:int)->message.Chain`  
-返回一条指定的 包装成 [message.Chain](https://github.com/XuuChannel/MahiroBot/blob/main/docs/message.md#class-chaintypestrsenderdictchainlist) 的消息链。  
+返回一条指定的 包装成 [`message.Chain`](https://github.com/XuuChannel/MahiroBot/blob/main/docs/message.md#class-chaintypestrsenderdictchainlist) 的消息链。  
 参数：
 - `messageID` ：消息链的messageID
 - `targetID` ：好友/群聊的qq号/群号

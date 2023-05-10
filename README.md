@@ -33,7 +33,7 @@
     - 基于 [`LoliconAPI`](https://api.lolicon.app/#/setu) 的随机涩图发送
 5. `MahiroClassic`:
     - 记录群友逆天言论与弔图并随机/定向爆典
-6. [计划中] `MahiroSocialCredit`:
+6. [开发中] `MahiroSocialCredit`:
     - 记录公民社会信用值。做的好！SC+10
 7. [计划中] `MahiroMeme`:
     - 随机梗图

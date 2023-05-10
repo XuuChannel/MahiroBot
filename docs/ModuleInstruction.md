@@ -44,7 +44,7 @@ def mahiroModule(bot:bot.Bot,inbound:message.Chain=None,evinbound:message.Event=
 >+ `inbound` ([message.Chain](https://github.com/XuuChannel/MahiroBot/blob/main/docs/message.md#class-chaintypestrsenderdictchainlist)类 触发模块的消息对象 仅在触发条件为 Command/Plain/At 时传入)
 >+ `evinbound` ([message.Event](https://github.com/XuuChannel/MahiroBot/blob/main/docs/message.md#class-eventeventsindict)类 触发模块的事件对象 仅在触发条件为 Event 时传入)
 >
->关于以上类的用法 以及 如何在主函数内调用bot内置功能和构建/发送消息链 请查阅 [MahiroBot类 与 内置函数](https://github.com/XuuChannel/MahiroBot/blob/master/docs/Class.md) (施工中) 。
+>关于以上类的用法 以及 如何在主函数内调用bot内置功能和构建/发送消息链 请查阅 [MahiroBot类 与 内置函数](https://github.com/XuuChannel/MahiroBot/blob/master/docs/Class.md) 。
 >
 >MahiroBot模块管理采用多线程技术，每个模块触发时都会产生一个新的线程。因此我们强烈建议在主函数外加入线程锁：  
 >```python
@@ -62,3 +62,6 @@ def mahiroModule(bot:bot.Bot,inbound:message.Chain=None,evinbound:message.Event=
 >同理 你也可以在主函数外定义模块的全局变量和函数。
 
 以上です。
+
+## 附录：一些代码示例
+（施工中）
