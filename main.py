@@ -24,5 +24,5 @@ b=bot.Bot("./config.toml")
 m=module.Module()
 
 while(1):
-    time.sleep(0.1)
+    time.sleep(0.5)
     m.moduleProcess(b)

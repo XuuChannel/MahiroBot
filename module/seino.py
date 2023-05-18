@@ -3,11 +3,11 @@
 from core import message
 from core import bot
 import psutil,os
-import _thread,time
+import _thread,time,threading,logging
 #代码文件名中带有字符"p"好像无法正常识别
 mahiroModuleInfo = {
     "name":"Performance",
-    "version":2.0,
+    "version":2.1,
     "type":"trigger",
     "condition":"Command",
     "command":["P"],
@@ -30,7 +30,8 @@ def mahiroModule(bot:bot.Bot,inbound:message.Chain=None,evinbound:message.Event=
         time.sleep(0.1)
     cLock.acquire()
     pinfo = psutil.Process(os.getpid())
-    perfmessage = "以下为机盖宁的进程信息喵\n\n内存占用: "+str(round(pinfo.memory_info().rss/1024/1024,2))+"MB ("+str(round(pinfo.memory_percent(),1))+"%)\nCPU占用: "+str(pinfo.cpu_percent(interval=3))+"%"
+    perfmessage = "以下为机盖宁的进程信息喵\n\n内存占用: "+str(round(pinfo.memory_info().rss/1024/1024,2))+"MB ("+str(round(pinfo.memory_percent(),1))+"%)\nCPU占用: "+str(pinfo.cpu_percent(interval=3))+"%\n当前活动线程数: "+str(threading.activeCount())
+    logging.info("CurrentActivity: "+str(threading.enumerate()))
     inbound.chainClear()
     inbound.add(message.Plain(perfmessage))
     inbound.send(bot)
