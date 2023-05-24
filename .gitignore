@@ -137,3 +137,5 @@ test.xml
 data/classic/
 openai_token.json
 test.py
+test.db
+test.db-journal
