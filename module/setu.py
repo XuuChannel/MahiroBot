@@ -32,10 +32,11 @@ def mahiroModule(bot:bot.Bot,inbound:message.Chain=None,evinbound:message.Event=
         msg.add(message.Plain(picinfo["title"]+" by "+picinfo["author"]+" (pid"+str(picinfo["pid"])+")\n"+picinfo["urls"]["regular"]))
         msg.send(bot)
         msg.chainClear()
-        pic = base64.b64encode(requests.get(picinfo["urls"]["regular"]).content).decode()
-        msg.add(message.Image(base64=pic))
+        #pic = base64.b64encode(requests.get(picinfo["urls"]["regular"]).content).decode()
+        #msg.add(message.Image(base64=pic))
+        msg.add(message.Image(url=picinfo["urls"]["regular"]))
         msg.send(bot)
-        del pic,picinfo
+        del picinfo
     except Exception:
         msg.chainClear()
         msg.add(message.Plain("机盖宁温馨提示:涩图获取失败喵"))
