@@ -4,7 +4,7 @@ from core import bot
 import logging
 import os
 import importlib
-import threading,_thread
+import threading,_thread,sys
 import toml
 import datetime,time
 
@@ -28,6 +28,7 @@ class Module:
             self.bootTime = str(datetime.datetime.utcnow())
             #启动信息还是得改改 美观一点
             self.versionMessage = "MahiroBot %s \nhttps://github.com/XuuChannel/MahiroBot\n版本说明:\n"%(version["version"])+version["info"]
+            del version
         def mahiroModule(self,bot:bot.Bot,inbound:message.Chain)->None:
             if(inbound.commandCheck("about")==True):
                 inbound.chainClear()
@@ -248,6 +249,7 @@ class Module:
                         logging.info("Module triggered. "+self.mlist[mnum].mahiroModuleInfo["name"])
                         t=threading.Thread(target=self.mlist[mnum].mahiroModule,args=(b,None,msg,),daemon=True)
                         t.start()
+        del msg
     def __trashCommandProcess(self,b:bot.Bot,msg:message.Chain,mnum:int):
         if(self.mlist[mnum].mahiroModuleInfo["condition"]=="Command"):
             for w in self.mlist[mnum].mahiroModuleInfo["command"]:

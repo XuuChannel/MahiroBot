@@ -9,10 +9,11 @@ import base64
 import requests
 import hashlib
 import random
+import sys
 
 mahiroModuleInfo = {
     "name":"MahiroClassic",
-    "version":1.0,
+    "version":1.1,
     "type":"trigger",
     "condition":"Command",
     "command":["入典","出典","语录入典","典","数典"],
@@ -58,7 +59,7 @@ def mahiroModule(bot:bot.Bot,inbound:message.Chain=None,evinbound:message.Event=
         else:classicOut(bot)
     elif(inbound.commandCheck("数典")==True):
         inbound.chainClear()
-        inbound.add(message.Plain("当前数据库中共有 "+str(len(classicList))+" 条数据喵"))
+        inbound.add(message.Plain("当前数据库中共有 "+str(len(classicList))+" 条数据,占用内存为 "+str(sys.getsizeof(classicList))+" 喵"))
         inbound.send(bot)
     elif(inbound.commandCheck("出典")==True and type(inbound.commandCheck("出典",True))==str and bot.perm.Check(inbound.target["id"])==0):
         num = inbound.commandCheck("出典",True)
@@ -126,6 +127,7 @@ def classicIn(b:bot.Bot,msgin:message.Chain,nameFlag:bool)->None:
         s = {"list":classicList}
         json.dump(s, f, ensure_ascii=False)
         f.close()
+        del f,classic,msgread,s,chainname
     else:
         msgin.chainClear()
         msgin.add(message.Plain("机盖宁温馨提示：读取引用消息失败喵"))
@@ -163,6 +165,7 @@ def classicOut(b:bot.Bot,num:int=None):
         msg.add(message.Plain("机盖宁温馨提示：读取错误喵"))
         msg.send(b)
         return None
+    del msg
 
 def classicDel(b:bot.Bot,num:int):
     global classicList

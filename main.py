@@ -19,6 +19,7 @@ logo = """\033[0;33m
 MahiroBot %s by Xuu [https://github.com/XuuChannel/MahiroBot]
 \033[0m"""%(verInfo["version"])
 print(logo)
+del verInfo,logo
 
 b=bot.Bot("./config.toml")
 m=module.Module()

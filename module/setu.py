@@ -6,7 +6,7 @@ import json
 
 mahiroModuleInfo = {
     "name":"MahiroSetu",
-    "version":1.5,
+    "version":1.6,
     "type":"trigger",
     "condition":"Command",
     "command":["涩图"],
@@ -35,7 +35,9 @@ def mahiroModule(bot:bot.Bot,inbound:message.Chain=None,evinbound:message.Event=
         pic = base64.b64encode(requests.get(picinfo["urls"]["regular"]).content).decode()
         msg.add(message.Image(base64=pic))
         msg.send(bot)
+        del pic,picinfo
     except Exception:
         msg.chainClear()
         msg.add(message.Plain("机盖宁温馨提示:涩图获取失败喵"))
         msg.send(bot)
+    del msg,prompt
