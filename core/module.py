@@ -4,7 +4,7 @@ from core import bot
 import logging
 import os
 import importlib
-import threading,_thread,sys
+import threading,_thread,sys,gc
 import toml
 import datetime,time
 
@@ -249,6 +249,7 @@ class Module:
                         logging.info("Module triggered. "+self.mlist[mnum].mahiroModuleInfo["name"])
                         t=threading.Thread(target=self.mlist[mnum].mahiroModule,args=(b,None,msg,),daemon=True)
                         t.start()
+                        gc.collect()
         del msg
     def __trashCommandProcess(self,b:bot.Bot,msg:message.Chain,mnum:int):
         if(self.mlist[mnum].mahiroModuleInfo["condition"]=="Command"):
@@ -267,6 +268,7 @@ class Module:
                             t=threading.Thread(target=self.mlist[mnum].mahiroModule,args=(b,msg,),daemon=True)
                             t.start()
                         else:self.mlist[0].mahiroModule(b,msg)
+                        gc.collect()
             case "Plain":
                 if("Plain" in msg.chainRead()["containObjs"]):
                     logging.info("Module triggered. "+self.mlist[mnum].mahiroModuleInfo["name"])
@@ -274,6 +276,7 @@ class Module:
                         t=threading.Thread(target=self.mlist[mnum].mahiroModule,args=(b,msg,),daemon=True)
                         t.start()
                     else:self.mlist[0].mahiroModule(b,msg)
+                    gc.collect()
             case "At":
                 if(msg.atRead()!=None and b.account in msg.atRead()):
                     logging.info("Module triggered. "+self.mlist[mnum].mahiroModuleInfo["name"])
@@ -281,3 +284,4 @@ class Module:
                         t=threading.Thread(target=self.mlist[mnum].mahiroModule,args=(b,msg,),daemon=True)
                         t.start()
                     else:self.mlist[0].mahiroModule(b,msg)
+                    gc.collect()
