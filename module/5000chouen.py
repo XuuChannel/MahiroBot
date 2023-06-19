@@ -6,7 +6,7 @@ from io import BytesIO
 #代码文件名中带有字符"p"好像无法正常识别
 mahiroModuleInfo = {
     "name":"5000兆円",
-    "version":1.0,
+    "version":1.1,
     "type":"trigger",
     "condition":"Command",
     "command":["5000"],
@@ -39,10 +39,11 @@ def mahiroModule(bot:bot.Bot,inbound:message.Chain=None,evinbound:message.Event=
             text = text.rstrip()
             text = text.split("|")
             inbound.chainClear()
+            if(len(text[0])>=10 or len(text[1])>=10):raise Exception
             inbound.add(message.Image(base64=pic64process(text[0],text[1])))
             inbound.send(bot)
         except:
             inbound.chainClear()
-            inbound.add(message.Plain("机盖宁温馨提示：输入格式错误喵 请参照以下格式\n'#5000 红字|白字'"))
+            inbound.add(message.Plain("机盖宁温馨提示：输入格式错误或超过字数限制喵 请参照以下格式填写喵\n'#5000 红字|白字'"))
             inbound.send(bot)
         cLock.release()
