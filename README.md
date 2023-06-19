@@ -38,10 +38,12 @@
 7. [计划中] `MahiroMeme`:
     - 随机梗图
 8. ~~`MahiroGPT`~~:
-    - ~~基于[`revChatGPT`](https://github.com/acheong08/ChatGPT)V1 的ai聊天模块（需要境外网络环境|模块安装说明详见代码文件注释）~~  
+    - ~~基于 [`revChatGPT`](https://github.com/acheong08/ChatGPT)V1 的ai聊天模块（需要境外网络环境|模块安装说明详见代码文件注释）~~  
     源项目已跑路 GPT道 堂堂完结
 9. `Performance`:
     - 输出性能信息
+10. `5000兆円`:
+    - 基于 [`5000choyen`](https://github.com/pcrbot/5000choyen) 的 5000兆円欲しい! style图片生成器 (需安装numpy库)
 
 >### **ここに注意！**
 >`MahiroBot` 不是(也不会是)完整的QQ机器人框架。_~~其实是因为作者太菜了 只管自己写的爽~~_  

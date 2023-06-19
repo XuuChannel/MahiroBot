@@ -129,6 +129,8 @@ dmypy.json
 .pyre/
 
 #Project Configs
+
+#MahiroBot cache&config
 sample.json
 config.toml
 t1.json
@@ -139,3 +141,4 @@ openai_token.json
 test.py
 test.db
 test.db-journal
+/data/5000choen
