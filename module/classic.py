@@ -13,15 +13,16 @@ import sys
 
 mahiroModuleInfo = {
     "name":"MahiroClassic",
-    "version":1.1,
+    "version":1.2,
     "type":"trigger",
     "condition":"Command",
-    "command":["入典","出典","语录入典","典","数典"],
+    "command":["入典","出典","语录入典","典","数典","查典"],
     "permission":False,
     "target":"target"
 }
 
 classicList = []
+pointer=0
 cLock = _thread.allocate_lock()
 if(os.path.exists("./data/classic")==False):
     os.mkdir("./data/classic")
@@ -39,6 +40,7 @@ logging.info("Module MahiroClassic INIT succeed.")
 def mahiroModule(bot:bot.Bot,inbound:message.Chain=None,evinbound:message.Event=None)->None:
     global cLock
     global classicList
+    global pointer
     while(cLock.locked()):
         time.sleep(0.1)
     cLock.acquire()
@@ -73,6 +75,10 @@ def mahiroModule(bot:bot.Bot,inbound:message.Chain=None,evinbound:message.Event=
     elif(inbound.commandCheck("出典")==True and type(inbound.commandCheck("出典",True))!=str and bot.perm.Check(inbound.target["id"])==0):
         inbound.chainClear()
         inbound.add(message.Plain("机盖宁温馨提示：缺少参数喵"))
+        inbound.send(bot)
+    elif(inbound.commandCheck("查典")==True):
+        inbound.chainClear()
+        inbound.add(message.Plain("机盖宁刚刚发送的典序号为："+str(pointer)+" 喵"))
         inbound.send(bot)
     else:
         inbound.chainClear()
@@ -134,12 +140,13 @@ def classicIn(b:bot.Bot,msgin:message.Chain,nameFlag:bool)->None:
         msgin.send(b)
         return None
     msgin.chainClear()
-    msgin.add(message.Plain("批准入典喵"))
+    msgin.add(message.Plain(str(len(classicList))+"号 批准入典喵"))
     msgin.send(b)
     return None
 
 def classicOut(b:bot.Bot,num:int=None):
     global classicList
+    global pointer
     msg = message.Chain()
     msg.setTarget(Group=b.target)
     if(len(classicList)==0):
@@ -151,6 +158,7 @@ def classicOut(b:bot.Bot,num:int=None):
         msg.add(message.Plain("机盖宁温馨提示：指定数字超出范围喵"))
         msg.send(b)
         return None
+    pointer=num
     if(classicList[num-1]["isNamed"]==True):
         userinfo = b.fetchMemberInfo(b.target,classicList[num-1]["id"])
         if(userinfo!=None):msg.add(message.Plain(userinfo["nickname"]+"("+str(classicList[num-1]["id"])+") 曾经说过："))
