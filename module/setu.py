@@ -38,10 +38,9 @@ def mahiroModule(bot:bot.Bot,inbound:message.Chain=None,evinbound:message.Event=
         msg.send(bot)
         del picinfo
     except Exception:
-        #msg.chainClear()
+        msg.chainClear()
         #msg.add(message.Plain("机盖宁温馨提示:涩图获取失败喵"))
-        #msg.send(bot)
-        #↓kaedebot特制
-        inbound.chainClear()
-        inbound.add(message.Plain("#典 388"))
+        #↓kaedebot特制 
+        msg.content = json.loads(open("./data/classic/1688571164.chain","r",encoding="utf-8").read())
+        msg.send(bot)
     del msg,prompt
