@@ -38,7 +38,10 @@ def mahiroModule(bot:bot.Bot,inbound:message.Chain=None,evinbound:message.Event=
         msg.send(bot)
         del picinfo
     except Exception:
-        msg.chainClear()
-        msg.add(message.Plain("机盖宁温馨提示:涩图获取失败喵"))
-        msg.send(bot)
+        #msg.chainClear()
+        #msg.add(message.Plain("机盖宁温馨提示:涩图获取失败喵"))
+        #msg.send(bot)
+        #↓kaedebot特制
+        inbound.chainClear()
+        inbound.add(message.Plain("#典 388"))
     del msg,prompt
