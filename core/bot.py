@@ -217,3 +217,20 @@ class Bot:
         except Exception as e:
             logging.error(e)
             return None
+    
+    def replyGroupInvite(self,eventid:int,fromid:int,groupid:int,reply:str="",agreement:bool=True):
+        replymessage = {"sessionKey":self.__session,"eventId":eventid,"fromId":fromid,"groupId":groupid,"operate":0,"message":reply}
+        if(agreement==False):replymessage["operate"]==1
+        url = self.__api+"/resp/botInvitedJoinGroupRequestEvent"
+        try:
+            resp=requests.post(url,json.dumps(replymessage,ensure_ascii=False).encode())
+        except Exception as e:
+            logging.error(e)
+    def replyFriendInvite(self,eventid:int,fromid:int,groupid:int=0,reply:str="",agreement:bool=True):
+        replymessage = {"sessionKey":self.__session,"eventId":eventid,"fromId":fromid,"groupId":groupid,"operate":0,"message":reply}
+        if(agreement==False):replymessage["operate"]==1
+        url = self.__api+"/resp/newFriendRequestEvent"
+        try:
+            resp=requests.post(url,json.dumps(replymessage,ensure_ascii=False).encode())
+        except Exception as e:
+            logging.error(e)
