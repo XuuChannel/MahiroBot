@@ -38,13 +38,15 @@
 7. [计划中] `MahiroMeme`:
     - 随机梗图
 8. `MahiroAIchat`:
-    - 施工中。。。
+    - 基于 [`Poe-Api`](https://github.com/ading2210/poe-api) 的AI聊天模块 (使用方法详见模块注释)
 9. `Performance`:
     - 输出性能信息
 10. `5000兆円`:
     - 基于 [`5000choyen`](https://github.com/pcrbot/5000choyen) 的 5000兆円欲しい! style图片生成器 (需安装numpy库)
 11. `PetPet`:
     - 移植自 [`PetPet`](https://github.com/SAGIRI-kawaii/saya_plugins_collection/tree/master/modules/PetPet) (需安装numpy moviepy库)
+12. `InviteManager`:
+    - 自动回应入群及好友请求
 
 >### **ここに注意！**
 >`MahiroBot` 不是(也不会是)完整的QQ机器人框架。_~~其实是因为作者太菜了 只管自己写的爽~~_  

@@ -1,7 +1,10 @@
+#模块使用方法：
+#参考https://github.com/ading2210/poe-api
+#token保存为TXT文件 置于./data/
+
 import poe
 from core import message
 from core import bot
-import json
 import logging
 import _thread,time
 
