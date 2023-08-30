@@ -176,6 +176,7 @@ def classicOut(b:bot.Bot,num:int=None):
         msg.chainClear()
     except Exception as e:
         msg.add(message.Plain("机盖宁温馨提示：读取错误喵"))
+        msg.add(message.Plain(str(e)))
         msg.send(b)
         return None
     del msg
