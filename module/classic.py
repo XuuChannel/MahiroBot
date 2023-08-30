@@ -167,6 +167,11 @@ def classicOut(b:bot.Bot,num:int=None):
         msg.chainClear()
     try:
         msg.content = json.loads(open("./data/classic/"+classicList[num-1]["chain"],"r",encoding="utf-8").read())
+        for i in msg.content:
+            if(i.key("imageId")!=None):
+                del i["imageId"]
+            elif(i.key("voiceId")!=None):
+                del i["voiceId"]
         msg.send(b)
         msg.chainClear()
     except Exception as e:
