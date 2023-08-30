@@ -168,14 +168,14 @@ def classicOut(b:bot.Bot,num:int=None):
     try:
         msg.content = json.loads(open("./data/classic/"+classicList[num-1]["chain"],"r",encoding="utf-8").read())
         for i in msg.content:
-            if(i.key("imageId")!=None):
+            if("imageId" in i):
                 del i["imageId"]
-            elif(i.key("voiceId")!=None):
+            elif("voiceId" in i):
                 del i["voiceId"]
         msg.send(b)
         msg.chainClear()
     except Exception as e:
-        msg.add(message.Plain("机盖宁温馨提示：读取错误喵"))
+        msg.add(message.Plain("机盖宁温馨提示：读取错误喵\n"))
         msg.add(message.Plain(str(e)))
         msg.send(b)
         return None
